@@ -22,12 +22,10 @@ from db import db
 from config import config
 
 from utils.middleware import Middleware
-from app.auth.views import auth as auth_blueprint
 from app.home.views import home as home_blueprint
-from app.admin.views import admin as admin_blueprint
 from app.feedback.views import feedback as feedback_blueprint
-
 from app.feedback.views import api as feedbackapi
+from app.feedback.views import GiftCardResource
 
 
 
@@ -73,12 +71,9 @@ def not_found(error):
 
 # 注册自定义blueprint模块
 app.register_blueprint(home_blueprint)
-app.register_blueprint(admin_blueprint, url_prefix="/api/admin")
-app.register_blueprint(auth_blueprint, url_prefix="/api/auth")
-
 
 # 添加资源
-feedbackapi.add_resource(TodoSimple, '/<string:todo_id>')
+feedbackapi.add_resource(GiftCardResource, '/<string:id>')
 # 注册自定义blueprint模块
 app.register_blueprint(feedback_blueprint, url_prefix="/api/feedback")
 

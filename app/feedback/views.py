@@ -20,10 +20,9 @@ def ping():
 # curl http://localhost:5000/todo1 -d "data=Remember the milk" -X PUT
 # curl http://localhost:5000/todo1
 
-class TodoSimple(Resource):
-    def get(self, todo_id):
-        return {todo_id: todos[todo_id]}
+class GiftCardResource(Resource):
+    def get(self):
+        return {}
 
-    def put(self, todo_id):
-        todos[todo_id] = request.form['data']
-        return {todo_id: todos[todo_id]}
+    def put(self, id):
+        return {}
