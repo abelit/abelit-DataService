@@ -60,7 +60,7 @@ class BaseConfig(object):
     USERNAME = 'dataservice'
     PASSWORD = 'Passw0rd'
     HOST = '10.50.0.210'
-    PORT = 53306
+    PORT = 3306
     DATABASE = 'dataservice'
     SQLALCHEMY_DATABASE_URI = '{}+{}://{}:{}@{}:{}/{}?charset=utf8'.format(
         DIALECT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE

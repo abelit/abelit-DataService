@@ -25,7 +25,7 @@ from utils.middleware import Middleware
 from app.home.views import home as home_blueprint
 from app.feedback.views import feedback as feedback_blueprint
 from app.feedback.views import api as feedbackapi
-from app.feedback.views import GiftCardResource
+from app.feedback.views import GiftCardResource,ShopCardResource
 
 
 
@@ -73,7 +73,9 @@ def not_found(error):
 app.register_blueprint(home_blueprint)
 
 # 添加资源
-feedbackapi.add_resource(GiftCardResource, '/<string:id>')
+feedbackapi.add_resource(GiftCardResource, '/gift')
+feedbackapi.add_resource(ShopCardResource, '/shop')
+
 # 注册自定义blueprint模块
 app.register_blueprint(feedback_blueprint, url_prefix="/api/feedback")
 
