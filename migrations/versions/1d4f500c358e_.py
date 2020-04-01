@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f567192d2db3
+Revision ID: 1d4f500c358e
 Revises: 
-Create Date: 2020-04-01 15:31:29.352243
+Create Date: 2020-04-01 17:41:37.978565
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f567192d2db3'
+revision = '1d4f500c358e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,11 +24,11 @@ def upgrade():
     sa.Column('base_brdname', sa.String(length=100), nullable=False),
     sa.Column('base_shopno', sa.String(length=100), nullable=False),
     sa.Column('base_company', sa.String(length=100), nullable=False),
-    sa.Column('base_expiredate', sa.DateTime(), nullable=False),
+    sa.Column('base_expiredate', sa.String(length=200), nullable=True),
     sa.Column('mem_check', sa.Integer(), nullable=False),
-    sa.Column('mem_silverdiscount', sa.Float(), nullable=True),
-    sa.Column('mem_gloddiscount', sa.Float(), nullable=True),
-    sa.Column('mem_diamonddiscount', sa.Float(), nullable=True),
+    sa.Column('mem_silverdiscount', sa.String(length=100), nullable=True),
+    sa.Column('mem_gloddiscount', sa.String(length=100), nullable=True),
+    sa.Column('mem_diamonddiscount', sa.String(length=100), nullable=True),
     sa.Column('mem_other', sa.Text(), nullable=True),
     sa.Column('sign_signature', sa.String(length=100), nullable=True),
     sa.Column('sign_contact', sa.String(length=100), nullable=True),

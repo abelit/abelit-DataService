@@ -27,12 +27,12 @@ class GiftCardModel(db.Model):
     base_shopno = db.Column(db.String(100), nullable=False, doc="店铺号")
     base_company = db.Column(db.String(100),
                      nullable=False, doc="品牌名称")
-    base_expiredate = db.Column(db.DateTime, nullable=False, default=datetime.now, doc="活动有效期")
+    base_expiredate = db.Column(db.String(200), nullable=True, default=datetime.now, doc="活动有效期")
 
     mem_check = db.Column(db.Integer, nullable=False,doc="是否提供会员福利，1是，0否")
-    mem_silverdiscount = db.Column(db.Float, nullable=True,doc="百合银卡消费折扣")
-    mem_gloddiscount = db.Column(db.Float, nullable=True,doc="玫瑰金卡消费折扣")
-    mem_diamonddiscount = db.Column(db.Float, nullable=True,doc="牡丹钻石卡消费折扣")
+    mem_silverdiscount = db.Column(db.String(100), nullable=True,doc="百合银卡消费折扣")
+    mem_gloddiscount = db.Column(db.String(100), nullable=True,doc="玫瑰金卡消费折扣")
+    mem_diamonddiscount = db.Column(db.String(100), nullable=True,doc="牡丹钻石卡消费折扣")
     mem_other = db.Column(db.Text, nullable=True,doc="其他增值福利")
     
     sign_signature = db.Column(db.String(100),
@@ -44,7 +44,7 @@ class GiftCardModel(db.Model):
     sign_email = db.Column(db.String(100),
                      nullable=True, doc="联系邮箱")
 
-    sign_replydate = db.Column(db.DateTime, nullable=True,default=datetime.now, doc="活动有效期")
+    sign_replydate = db.Column(db.DateTime, nullable=True,default=datetime.now, doc="回复日期")
     
     created_timestamp = db.Column(
         db.DateTime, nullable=False, default=datetime.now)
