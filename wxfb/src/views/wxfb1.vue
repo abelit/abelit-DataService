@@ -8,16 +8,16 @@
     <div>
       <b-form @submit="onSubmit" @reset="onReset" v-if="show">
         <b-card style class="mb-2">
-          <b-form-group id="input-group-1" label="品牌名称" label-for="input-1">
+          <b-form-group id="input-group-1" label="*品牌名称" label-for="input-1">
             <b-form-input id="input-1" v-model="form.base_brdname" required></b-form-input>
           </b-form-group>
-          <b-form-group id="input-group-2" label="店铺号" label-for="input-2">
+          <b-form-group id="input-group-2" label="*店铺号" label-for="input-2">
             <b-form-input id="input-2" v-model="form.base_shopno" required></b-form-input>
           </b-form-group>
-          <b-form-group id="input-group-3" label="公司名称" label-for="input-3">
+          <b-form-group id="input-group-3" label="*公司名称" label-for="input-3">
             <b-form-input id="input-3" v-model="form.base_company" required></b-form-input>
           </b-form-group>
-          <b-form-group label="接受购物卡">
+          <b-form-group label="*接受购物卡">
             <b-form-radio v-model="form.spcard_check" name="some-radios" value="1">确认接受</b-form-radio>
             <b-form-radio v-model="form.spcard_check" name="some-radios" value="0">确认不接受</b-form-radio>
           </b-form-group>
@@ -29,7 +29,6 @@
               <b-form-checkbox-group
                 v-model="form.spcard_shopmall"
                 :options="form.options"
-                :state="state"
                 name="flavour-2a"
                 stacked
               >
@@ -37,27 +36,27 @@
               </b-form-checkbox-group>
               <label>之店铺进行刷卡消费，购买之商品种类将不受限制。</label>
               <label for>购物卡持卡消费优惠政策(可填)</label>
-              <b-form-group class="mb-0" label="备注" label-for="textarea-formatter" description>
+              <b-form-group class="mb-0" label-for="textarea-formatter" description>
                 <b-form-textarea
                   id="textarea-formatter"
                   v-model="form.remark_policy"
-                  placeholder="备注"
+                  
                 ></b-form-textarea>
               </b-form-group>
             </b-form-group>
             <label>如有任何疑问, 请与品牌市场中心-会员管理市场部 刘另红小姐 联系。Email:liulinghong@honglicheng Tel:18275040052</label>
           </div>
         </b-card>
-        <b-form-group id="input-group-4" label="联系人" label-for="input-4">
+        <b-form-group id="input-group-4" label="*联系人" label-for="input-4">
           <b-form-input id="input-4" v-model="form.sign_contact" required></b-form-input>
         </b-form-group>
-        <b-form-group id="input-group-5" label="联系电话" label-for="input-5">
+        <b-form-group id="input-group-5" label="*联系电话" label-for="input-5">
           <b-form-input id="input-5" type="number" v-model="form.sign_call" required></b-form-input>
         </b-form-group>
         <b-form-group id="input-group-6" label="电子邮箱" label-for="input-6">
           <b-form-input id="input-6" v-model="form.sign_email" type="email"></b-form-input>
         </b-form-group>
-        <b-button block type="submit" variant="outline-primary">提交</b-button>
+        <b-button block type="submit" variant="outline-primary" class="mb-5">提交</b-button>
         <!-- <b-button block type="reset" variant="outline-danger">重填</b-button> -->
       </b-form>
     </div>
@@ -118,9 +117,15 @@ export default {
         .post("/api/feedback/shop", data)
         .then(res => {
           console.log(res);
+          if(res.status==200){
+            alert("数据提交成功")
+          }else{
+            alert("填报异常，请检查后再次提交")
+          }
         })
         .catch(error => {
           console.log(error);
+          alert("填报异常，请检查后再次提交")
         });
 
       // data默认接收剩余的属性值, 打印结果同上

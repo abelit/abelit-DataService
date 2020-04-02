@@ -18,7 +18,7 @@ Vue.config.productionTip = false;
 
 
 // axios.defaults.baseURL = "http://localhost:5000";
-axios.defaults.baseURL = "http://10.46.100.220:5000";
+axios.defaults.baseURL = "http://58.42.231.98:5060";
 Vue.prototype.$axios = axios;
 
 

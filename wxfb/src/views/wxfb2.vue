@@ -8,32 +8,37 @@
     <div>
       <b-form @submit="onSubmit" @reset="onReset" v-if="show">
         <b-card style class="mb-2">
-          <b-form-group id="input-group-1" label="品牌名称" label-for="input-1">
+          <b-form-group id="input-group-1" label="*品牌名称" label-for="input-1">
             <b-form-input id="input-1" v-model="form.base_brdname" required></b-form-input>
           </b-form-group>
-          <b-form-group id="input-group-2" label="店铺号" label-for="input-2">
+          <b-form-group id="input-group-2" label="*店铺号" label-for="input-2">
             <b-form-input id="input-2" v-model="form.base_shopno" required></b-form-input>
           </b-form-group>
-          <b-form-group id="input-group-3" label="公司名称" label-for="input-3">
+          <b-form-group id="input-group-3" label="*公司名称" label-for="input-3">
             <b-form-input id="input-3" v-model="form.base_company" required></b-form-input>
           </b-form-group>
-          <b-form-group id="input-group-4" label="活动有效期" label-for="input-4">
-            <b-form-input id="input-4" v-model="form.base_expiredate" required  placeholder="如：2020年4月1日至2021年3月31日有效"></b-form-input>
+          <b-form-group id="input-group-4" label="*活动有效期" label-for="input-4">
+            <b-form-input
+              id="input-4"
+              v-model="form.base_expiredate"
+              required
+              placeholder="如：2020/4/4至2021/3/31"
+            ></b-form-input>
           </b-form-group>
-          <b-form-group label="是否提供会员福利">
+          <b-form-group label="*是否提供会员福利">
             <b-form-radio v-model="form.mem_check" name="some-radios" value="1">是</b-form-radio>
             <b-form-radio v-model="form.mem_check" name="some-radios" value="0">否</b-form-radio>
           </b-form-group>
           <div>
             <b-form-group label="如是，提供会员福利如下" v-if="form.mem_check=='1'">
-              <b-input-group prepend="百合银卡会员消费折扣" append="折" class="mb-2 mr-sm-2 mb-sm-0">
+              <b-input-group prepend="*百合银卡会员消费折扣" append="折" class="mb-2 mr-sm-2 mb-sm-0">
                 <b-input v-model="form.mem_silverdiscount" required></b-input>
               </b-input-group>
-              <b-input-group prepend="玫瑰金卡会员消费折扣" append="折" class="mb-2 mr-sm-2 mb-sm-0">
-                <b-input   v-model="form.mem_gloddiscount" required></b-input>
+              <b-input-group prepend="*玫瑰金卡会员消费折扣" append="折" class="mb-2 mr-sm-2 mb-sm-0">
+                <b-input v-model="form.mem_gloddiscount" required></b-input>
               </b-input-group>
-              <b-input-group prepend="牡丹钻卡会员消费折扣" append="折" class="mb-2 mr-sm-2 mb-sm-0">
-                <b-input   v-model="form.mem_diamonddiscount" required></b-input>
+              <b-input-group prepend="*牡丹钻卡会员消费折扣" append="折" class="mb-2 mr-sm-2 mb-sm-0">
+                <b-input v-model="form.mem_diamonddiscount" required></b-input>
               </b-input-group>
               <label>其他增值福利</label>
               <b-form-textarea id="textarea-formatter" v-model="form.mem_other"></b-form-textarea>
@@ -46,16 +51,16 @@
             </ul>
           </div>
         </b-card>
-        <b-form-group id="input-group-5" label="联系人" label-for="input-5">
+        <b-form-group id="input-group-5" label="*联系人" label-for="input-5">
           <b-form-input id="input-5" v-model="form.sign_contact" required></b-form-input>
         </b-form-group>
-        <b-form-group id="input-group-6" label="联系电话" label-for="input-6">
+        <b-form-group id="input-group-6" label="*联系电话" label-for="input-6">
           <b-form-input id="input-6" type="number" v-model="form.sign_call" required></b-form-input>
         </b-form-group>
         <b-form-group id="input-group-7" label="电子邮箱" label-for="input-7">
           <b-form-input id="input-7" v-model="form.sign_email" type="email"></b-form-input>
         </b-form-group>
-        <b-button block type="submit" variant="outline-primary">提交</b-button>
+        <b-button block type="submit" variant="outline-primary" class="mb-5">提交</b-button>
         <!-- <b-button block type="reset" variant="outline-danger">重填</b-button> -->
       </b-form>
     </div>
@@ -66,7 +71,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -76,7 +80,7 @@ export default {
         base_brdname: "",
         base_shopno: "",
         base_company: "",
-        base_expiredate:"",
+        base_expiredate: "",
         mem_check: 1,
         mem_silverdiscount: "",
         mem_gloddiscount: "",
@@ -90,31 +94,32 @@ export default {
     };
   },
   methods: {
-     handleChange (values) {
-      this.datevalues=values;
-      console.log(this.datevalues)
+    handleChange(values) {
+      this.datevalues = values;
+      console.log(this.datevalues);
       //this.values = values
     },
     onSubmit(evt) {
       evt.preventDefault();
 
-
       // 方法二:
       //let { options, ...data } = this.form;
-     // console.log(options);
+      // console.log(options);
       //console.log(JSON.stringify(data));
 
       this.$axios
         .post("/api/feedback/gift", this.form)
         .then(res => {
           console.log(res);
-          if(res.data.code!=200){
-            alert("请按要求填写数据")
+          if (res.status == 200) {
+            alert("数据提交成功");
+          } else {
+            alert("填报异常，请检查后再次提交");
           }
         })
         .catch(error => {
           console.log(error);
-          
+          alert("填报异常，请检查后再次提交");
         });
 
       // data默认接收剩余的属性值, 打印结果同上
