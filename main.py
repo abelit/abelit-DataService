@@ -21,7 +21,7 @@ from flask_restful import Api, Resource
 from db import db
 from config import config
 
-from utils.middleware import Middleware
+#from utils.middleware import Middleware
 from app.home.views import home as home_blueprint
 from app.feedback.views import feedback as feedback_blueprint
 from app.feedback.views import api as feedbackapi
@@ -54,8 +54,9 @@ jwt = JWTManager(app)
 @app.before_request
 def process_start_request():
     # print("正在访问： "+request.path)
-    app.wsgi_app = Middleware(app.wsgi_app, request.path)
+    # app.wsgi_app = Middleware(app.wsgi_app, request.path)
     # print(request.remote_addr)
+    pass
 
 
 @app.after_request
