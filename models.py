@@ -96,3 +96,12 @@ class ShopCardModel(db.Model):
 
     def __repr__(self):
         return '<ShopCardModel %r>' % self.base_brdname
+
+class EmployeeAttendanceModel(db.Model):
+    __tablename__ = "employee_attendance"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    userid = db.Column(db.Integer, nullable=False)
+    username = db.Column(db.String(200), nullable=False)
+    temperature = db.Column(db.Float, nullable=True)
+    checktime = db.Column(db.DateTime, nullable=False)
+    created_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)

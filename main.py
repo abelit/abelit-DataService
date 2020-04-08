@@ -23,11 +23,14 @@ from config import config
 
 #from utils.middleware import Middleware
 from app.home.views import home as home_blueprint
+
 from app.feedback.views import feedback as feedback_blueprint
 from app.feedback.views import api as feedbackapi
 from app.feedback.views import GiftCardResource,ShopCardResource
 
-
+from app.employee.views import employee as employee_blueprint
+from app.employee.views import api as employeeapi
+from app.employee.views import EmployeeAttendance
 
 # 创建flask实例对象
 app = Flask(__name__)
@@ -79,6 +82,10 @@ feedbackapi.add_resource(ShopCardResource, '/shop')
 
 # 注册自定义blueprint模块
 app.register_blueprint(feedback_blueprint, url_prefix="/api/feedback")
+
+
+employeeapi.add_resource(EmployeeAttendance, '/attend')
+app.register_blueprint(employee_blueprint, url_prefix="/api/employee")
 
 
 if __name__ == "__main__":
