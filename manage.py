@@ -22,12 +22,11 @@ manager = Manager(app)
 # 添加数据库迁移命令
 manager.add_command('db', MigrateCommand)
 
-
+# Add Custom Command
 @manager.option("-n", "--name", dest="name", default="www.baidu.com")
 def hello(name):
     print("hello world!")
     print(name)
-
 
 @manager.option("-n", "--name", dest="name", default="www.baidu.com")
 def world(name):
