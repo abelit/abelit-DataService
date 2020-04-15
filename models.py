@@ -116,4 +116,5 @@ class EmployeeAttendanceDeviceModel(db.Model):
     snid = db.Column(db.String(200), nullable=False)
     snname = db.Column(db.String(200), nullable=False)
     unname = db.Column(db.String(200), nullable=False)
+    ip = db.Column(db.String(200), nullable=False)
     created_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)

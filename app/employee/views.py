@@ -92,6 +92,7 @@ class EmployeeAttendanceDevice(Resource):
                 "snid": ed.snid,
                 "snname": ed.snname,
                 "unname": ed.unname,
+                "ip": ed.ip,
                 "created_timestamp": ed.created_timestamp
             })
 
@@ -105,8 +106,9 @@ class EmployeeAttendanceDevice(Resource):
         snid = req_data.get('snid')
         snname = req_data.get('snname')
         unname = req_data.get('unname')
+        ip = req_data.get('ip')
 
-        empdvc_attend = EmployeeAttendanceDeviceModel(snid=snid,snname=snname,unname=unname)
+        empdvc_attend = EmployeeAttendanceDeviceModel(snid=snid,snname=snname,unname=unname,ip=ip)
 
         try:
             db.session.add(empdvc_attend)
