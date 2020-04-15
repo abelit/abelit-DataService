@@ -53,9 +53,11 @@ class EmployeeAttendance(Resource):
         snname = req_data.get('snname')
         unname = req_data.get('unname')
 
-        # 根据设备id从后台获取snname,unname
-        snname = '花果园购物中心1'
-        unname = '宏立城商业集团'
+        # 根据设备snid从后台获取snname,unname
+        dvc = EmployeeAttendanceDeviceModel.query.filter_by(snid=snid)[0]
+
+        snname = dvc.snname
+        unname = dvc.unname
 
         emp_attend = EmployeeAttendanceModel(userid=userid, username=username, checktime=checktime, temperature=temperature,snid=snid,snname=snname,unname=unname)
 
