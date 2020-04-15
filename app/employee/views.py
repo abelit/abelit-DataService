@@ -54,10 +54,16 @@ class EmployeeAttendance(Resource):
         unname = req_data.get('unname')
 
         # 根据设备snid从后台获取snname,unname
-        dvc = EmployeeAttendanceDeviceModel.query.filter_by(snid=snid)[0]
+        dvc = EmployeeAttendanceDeviceModel.query.filter_by(snid=snid).first()
 
-        snname = dvc.snname
-        unname = dvc.unname
+        if dvc is not None:
+            snname = dvc.snname
+            unname = dvc.unname
+        else:
+            return jsonify({
+                "msg": "failed",
+                "code": 501
+            })
 
         emp_attend = EmployeeAttendanceModel(userid=userid, username=username, checktime=checktime, temperature=temperature,snid=snid,snname=snname,unname=unname)
 
