@@ -104,4 +104,16 @@ class EmployeeAttendanceModel(db.Model):
     username = db.Column(db.String(200), nullable=False)
     temperature = db.Column(db.Float, nullable=True)
     checktime = db.Column(db.DateTime, nullable=False)
+    snid = db.Column(db.String(200), nullable=False)
+    snname = db.Column(db.String(200), nullable=False)
+    unname = db.Column(db.String(200), nullable=False)
+    created_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)
+
+
+class EmployeeAttendanceDeviceModel(db.Model):
+    __tablename__ = "employee_attendance_device"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    snid = db.Column(db.String(200), nullable=False)
+    snname = db.Column(db.String(200), nullable=False)
+    unname = db.Column(db.String(200), nullable=False)
     created_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)

@@ -30,7 +30,7 @@ from app.feedback.views import GiftCardResource,ShopCardResource
 
 from app.employee.views import employee as employee_blueprint
 from app.employee.views import api as employeeapi
-from app.employee.views import EmployeeAttendance
+from app.employee.views import EmployeeAttendance,EmployeeAttendanceDevice
 
 # 创建flask实例对象
 app = Flask(__name__)
@@ -85,6 +85,7 @@ app.register_blueprint(feedback_blueprint, url_prefix="/api/feedback")
 
 
 employeeapi.add_resource(EmployeeAttendance, '/attend')
+employeeapi.add_resource(EmployeeAttendanceDevice, '/device')
 app.register_blueprint(employee_blueprint, url_prefix="/api/employee")
 
 

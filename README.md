@@ -11,3 +11,40 @@
  & 
  python3 main.py
 ```
+
+# API
+
+```
+http://localhost:5060/api/employee/attend
+POST:
+
+
+GET:
+
+
+http://localhost:5060/api/employee/device
+POST:
+{
+	"snid": "23423dfa5462345",
+	"snname": "花果园购物中心1",
+	"unname": "宏立城商业集团"
+}
+
+GET:
+[
+    {
+        "id": 1,
+        "snid": "23423dfa5462345",
+        "snname": "花果园购物中心1",
+        "unname": "宏立城商业集团",
+        "created_timestamp": "Wed, 15 Apr 2020 15:28:11 GMT"
+    },
+    {
+        "id": 2,
+        "snid": "23423dfa5462345",
+        "snname": "花果园购物中心1",
+        "unname": "宏立城商业集团",
+        "created_timestamp": "Wed, 15 Apr 2020 15:36:26 GMT"
+    }
+]
+```
