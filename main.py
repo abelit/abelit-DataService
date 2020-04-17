@@ -32,6 +32,9 @@ from app.employee.views import employee as employee_blueprint
 from app.employee.views import api as employeeapi
 from app.employee.views import EmployeeAttendance,EmployeeAttendanceDevice
 
+# import ptraffic blueprint
+from app.ptraffic.views import ptraffic as ptraffic_blueprint
+
 # 创建flask实例对象
 app = Flask(__name__)
 
@@ -58,13 +61,13 @@ jwt = JWTManager(app)
 def process_start_request():
     # print("正在访问： "+request.path)
     # app.wsgi_app = Middleware(app.wsgi_app, request.path)
-    # print(request.remote_addr)
-    pass
+    print(request.remote_addr)
 
 
 @app.after_request
 def process_end_request(response):
     print("结束访问： "+request.path)
+    # Error "AttributeError: 'NoneType' object has no attribute 'headers'" will bring up if no return response
     return response
 
 
@@ -76,17 +79,18 @@ def not_found(error):
 # 注册自定义blueprint模块
 app.register_blueprint(home_blueprint)
 
-# 添加资源
+# 添加资源 feedback & 注册自定义blueprint模块
 feedbackapi.add_resource(GiftCardResource, '/gift')
 feedbackapi.add_resource(ShopCardResource, '/shop')
-
-# 注册自定义blueprint模块
 app.register_blueprint(feedback_blueprint, url_prefix="/api/feedback")
 
-
+# import employee
 employeeapi.add_resource(EmployeeAttendance, '/attend')
 employeeapi.add_resource(EmployeeAttendanceDevice, '/device')
 app.register_blueprint(employee_blueprint, url_prefix="/api/employee")
+
+# import ptraffic
+app.register_blueprint(ptraffic_blueprint, url_prefix="/api/ptraffic")
 
 
 if __name__ == "__main__":

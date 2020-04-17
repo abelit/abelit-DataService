@@ -48,3 +48,13 @@ GET:
     }
 ]
 ```
+
+
+# Python Oracle
+```bash
+#.bash_rc
+export ORACLE_HOME=/opt/oracle/instantclient_12_2
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+export NLS_LANG="SIMPLIFIED CHINESE_CHINA.ZHS16GBK"
+export LD_LIBRARY_PATH=$ORACLE_HOME:$LD_LIBRARY_PATH
+```
