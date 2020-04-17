@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="background:#409EFF;color:#ffffff;padding:10px;">
-      花果园购物中心疫情期间客流
+      花果园购物中心1-疫情期各入口客流统计
     </div>
     <el-row>
       <el-col>
@@ -42,7 +42,7 @@
         >
           <el-table-column type="index" width="50"></el-table-column>
           <el-table-column prop="tbheader" label="出入口"></el-table-column>
-          <el-table-column prop="tbdata" label="客流"></el-table-column>
+          <el-table-column prop="tbdata" label="10:00~22:00 客流(人次)"></el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -216,7 +216,7 @@ export default class ComponentName extends Vue {
                 return prev;
               }
             }, 0);
-            sums[index] = this.thousandSeparator(sums[index]) + ' (人)';
+            sums[index] = this.thousandSeparator(sums[index]) + '';
           } else {
             sums[index] = '';
           }
