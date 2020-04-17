@@ -1,0 +1,92 @@
+@for $i from 1 through 200 {
+  .ma-#{$i} {
+    margin: ($i) + px;
+  }
+  .mx-#{$i} {
+    margin-left: ($i) + px;
+    margin-right: ($i) + px;
+  }
+  .my-#{$i} {
+    margin-top: ($i) + px;
+    margin-bottom: ($i) + px;
+  }
+  .mt-#{$i} {
+    margin-top: ($i) + px;
+  }
+  .mb-#{$i} {
+    margin-bottom: ($i) + px;
+  }
+  .ml-#{$i} {
+    margin-left: ($i) + px;
+  }
+  .mr-#{$i} {
+    margin-right: ($i) + px;
+  }
+
+  .pa-#{$i} {
+    padding: ($i) + px;
+  }
+  .px-#{$i} {
+    padding-left: ($i) + px;
+    padding-right: ($i) + px;
+  }
+  .py-#{$i} {
+    padding-top: ($i) + px;
+    padding-bottom: ($i) + px;
+  }
+  .pt-#{$i} {
+    padding-top: ($i) + px;
+  }
+  .pb-#{$i} {
+    padding-bottom: ($i) + px;
+  }
+  .pl-#{$i} {
+    padding-left: ($i) + px;
+  }
+  .pr-#{$i} {
+    padding-right: ($i) + px;
+  }
+
+  .fz-#{$i} {
+    font-size: ($i/100) + rem;
+  }
+}
+// Colors
+$primary: #409eff;
+$success: #67c23a;
+$warning: #e6a23c;
+$danger: #f56c6c;
+$info: #909399;
+$primarytext: #303133;
+$regulartext: #606266;
+$secondarytext: #e6a23c;
+$placeholder: #c0c4cc;
+$colorinfo: #909399;
+$black: #000000;
+$white: #ffffff;
+
+// 定义需要实现的按钮名和颜色，键值对
+$color-types: (
+  'primary': $primary,
+  'success': $success,
+  'warning': $warning,
+  'danger': $danger,
+  'info': $info,
+  'primarytext': $primarytext,
+  'regulartext': $regulartext,
+  'secondarytext': $secondarytext,
+  'placeholder': $placeholder,
+  'colorinfoz': $colorinfo,
+  'black': $black,
+  'white': $white,
+);
+@each $name, $color in $color-types {
+  .text-#{$name} {
+    @if $name == normal {
+      // 判断 button 名 是否为 'normal'
+      color: #333; // 如果是，内部文字颜色为 #333
+    } @else {
+      color: $color;
+    }
+  }
+}

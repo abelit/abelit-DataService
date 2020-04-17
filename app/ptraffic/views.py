@@ -299,7 +299,7 @@ def get_time_passenger_traffic():
         xf_tc_countdata
         WHERE
         xf_starthour between 10 and 22 and
-        to_date(XF_DATE_TIME,'yyyy-mm-dd') between to_date({0},'yyyy-mm-dd') and to_Date({1},'yyyy-mm-dd')
+        to_date(XF_DATE_TIME,'yyyy-mm-dd') between to_date('{0}','yyyy-mm-dd') and to_Date('{1}','yyyy-mm-dd')
         """
     results = oracle.select(sql_text.format(starttime, endtime))
 

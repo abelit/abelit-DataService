@@ -16,10 +16,20 @@ from flask import render_template, Blueprint, request, jsonify, current_app
 home = Blueprint("home", __name__)
 
 # 入口文件，通过入口文件跳转到vue前端
-@home.route('/')
-def index():
+# @home.route('/')
+# def index():
+#     # flash('You were successfully logged in')
+#     return render_template('index.html')
+
+@home.route('/ptraffic')
+def ptraffic_index():
     # flash('You were successfully logged in')
-    return render_template('index.html')
+    return render_template('ptraffic_index.html')
+
+@home.route('/')
+def report_index():
+    # flash('You were successfully logged in')
+    return render_template('report_index.html')
 
 
 @home.route('/api/ping')
