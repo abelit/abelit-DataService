@@ -1,19 +1,62 @@
 import os
 import shutil
 
-os.chdir("./frontend")
-
-os.system("npm install")
-
-os.system("npm run build")
 
 def copy_and_overwrite(from_path, to_path):
-    if os.path.exists(to_path):
+    if os.path.exists(to_path) and os.path.isdir(to_path):
         shutil.rmtree(to_path)
-    shutil.copytree(from_path, to_path)
 
-shutil.copy('./dist/index.html','../third_party_feedback/feedback/templates/index.html')
-shutil.copy('./dist/favicon.ico','../third_party_feedback/feedback/static/favicon.ico')
+    if os.path.exists(from_path) and os.path.isdir(from_path):
+        print("copying dir ...")
+        shutil.copytree(from_path, to_path)
+    if os.path.exists(from_path) and os.path.isfile(from_path):
+        print("copying file ...")
+        shutil.copy(from_path,to_path)
 
-for i in os.listdir('./dist/static'):
-    copy_and_overwrite('./dist/static/'+i,'../third_party_feedback/feedback/static/'+i)
+staticdir = ['js','css','img','fonts']
+
+for i in staticdir:
+    if not os.path.exists('./static/'+i):
+        os.mkdir('./static/'+i)
+
+os.chdir("./reportweb")
+# os.system("npm install")
+os.system("npm run build")
+
+copy_and_overwrite('./dist/report_index.html','../templates/report_index.html')
+copy_and_overwrite('./dist/favicon.ico','../static/favicon.ico')
+
+if os.path.exists('./dist/static/js'):
+    for i in os.listdir('./dist/static/js'):
+        copy_and_overwrite('./dist/static/js/'+i,'../static/js/'+i)
+
+if os.path.exists('./dist/static/css'):
+    for i in os.listdir('./dist/static/css'):
+        copy_and_overwrite('./dist/static/css/'+i,'../static/css/'+i)
+if os.path.exists('./dist/static/fonts'):
+    for i in os.listdir('./dist/static/fonts'):
+        copy_and_overwrite('./dist/static/fonts/'+i,'../static/fonts/'+i)
+if os.path.exists('./dist/static/img'):
+    for i in os.listdir('./dist/static/img'):
+        copy_and_overwrite('./dist/static/img/'+i,'../static/img/'+i)
+
+
+os.chdir("../ptrafficweb")
+# os.system("npm install")
+os.system("npm run build")
+
+shutil.copy('./dist/ptraffic_index.html','../templates/ptraffic_index.html')
+
+if os.path.exists('./dist/static/js'):
+    for i in os.listdir('./dist/static/js'):
+        copy_and_overwrite('./dist/static/js/'+i,'../static/js/'+i)
+
+if os.path.exists('./dist/static/css'):
+    for i in os.listdir('./dist/static/css'):
+        copy_and_overwrite('./dist/static/css/'+i,'../static/css/'+i)
+if os.path.exists('./dist/static/fonts'):
+    for i in os.listdir('./dist/static/fonts'):
+        copy_and_overwrite('./dist/static/fonts/'+i,'../static/fonts/'+i)
+if os.path.exists('./dist/static/img'):
+    for i in os.listdir('./dist/static/img'):
+        copy_and_overwrite('./dist/static/img/'+i,'../static/img/'+i)
