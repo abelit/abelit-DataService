@@ -41,7 +41,7 @@
           :default-sort="{ prop: 'date', order: 'descending' }"
         >
           <el-table-column type="index" width="50"></el-table-column>
-          <el-table-column prop="tbheader" label="出入口"></el-table-column>
+          <el-table-column prop="tbheader" label="入口"></el-table-column>
           <el-table-column prop="tbdata" :label="titleLabel" :render-header="renderheader"></el-table-column>
         </el-table>
       </el-col>
