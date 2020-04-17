@@ -274,7 +274,7 @@ def get_time_passenger_traffic():
             end),0) "H&M",
         nvl(sum(case
         when XF_CAMERAID in 
-            ('GHGY5500033230','GHGY5500033229','GHGY5500033196','GHGY5500033197')
+            ('GHGY5500033203')
             then XF_INCOUNT  
             end),0) "人行天桥",
         nvl(sum(case
