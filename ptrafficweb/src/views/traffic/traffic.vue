@@ -22,6 +22,7 @@
             icon="el-icon-search"
             circle
             class="ma-5"
+            :disabled="disabled"
             @click="btn"
           ></el-button>
         </div>
@@ -31,6 +32,8 @@
       <el-col>
         <el-table
           :data="tableData"
+          v-loading="loading"
+          element-loading-text="客流数据加载中..."
           border
           show-summary
           :summary-method="getSummaries"
@@ -52,6 +55,8 @@ import Axios from "axios";
 
 @Component
 export default class ComponentName extends Vue {
+  loading: boolean = true;
+  disabled: boolean = false;
   tableData: Array<object> = [];
 
   pickerOptions: any = {
@@ -116,13 +121,16 @@ export default class ComponentName extends Vue {
     // console.log(this.value2);
     // console.log(this.thousandSeparator(4656262.262))
 
-    this.tableData = [];
+    // this.tableData = [];
     this.getData(this.value2[0].toString(), this.value2[1].toString());
   }
   private mounted() {
     console.log(this.value2);
+    this.getData(this.value2[0].toString(), this.value2[1].toString());
   }
   public getData(s: string, d: string) {
+    this.disabled = true;
+    this.loading = true;
     Axios.get("http://58.42.231.98:5060/api/ptraffic/time", {
       params: {
         start: s,
@@ -132,7 +140,7 @@ export default class ComponentName extends Vue {
       .then((res) => {
         if (res.status == 200) {
           //{"tbheader":"psquare","tbdata":2000},{"tbheader":"phm","tbdata":3000}
-
+          this.tableData = [];
           let resData = res.data[0];
           let tbheader;
           for (let j in resData) {
@@ -159,11 +167,14 @@ export default class ComponentName extends Vue {
             });
             //console.log(j+":"+resData[j]);
           }
+          this.loading = false;
+          this.disabled = false;
           console.log(this.tableData);
         }
       })
       .catch((err) => {
         console.log(err);
+        this.disabled = false;
       });
   }
 
