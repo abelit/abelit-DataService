@@ -42,7 +42,7 @@
         >
           <el-table-column type="index" width="50"></el-table-column>
           <el-table-column prop="tbheader" label="出入口"></el-table-column>
-          <el-table-column prop="tbdata" label="10:00~22:00 客流(人次)"></el-table-column>
+          <el-table-column prop="tbdata" :label="titleLabel" :render-header="renderheader"></el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -58,6 +58,7 @@ export default class ComponentName extends Vue {
   loading: boolean = true;
   disabled: boolean = false;
   tableData: Array<object> = [];
+  titleLabel: string =" 客流(人次)"+ "/" + "10:00~22:00"
 
   pickerOptions: any = {
     disabledDate(time: any) {
@@ -111,6 +112,14 @@ export default class ComponentName extends Vue {
       new Date(new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * 1))
     ),
   ];
+
+  private renderheader(h:any, { column, $index }:any) {
+     return h('span', {}, [
+        h('span', {}, column.label.split('/')[0]),
+        h('br'),
+        h('span', {}, column.label.split('/')[1])
+     ])
+  }
 
   public thousandSeparator(num: number) {
     return (
