@@ -33,6 +33,7 @@
         <el-table
           :data="tableData"
           v-loading="loading"
+          :row-class-name="tableRowClassName"
           element-loading-text="客流数据加载中..."
           border
           show-summary
@@ -235,10 +236,28 @@ export default class ComponentName extends Vue {
 
         return sums;
       }
+      public tableRowClassName({row, rowIndex}:any) {
+        console.log(row['tbdata'].replace(",",""))
+        if (row['tbdata'].replace(",","") >=5000) {
+          return 'warning-row';
+        }
+        return '';
+      }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import "@/assets/scss/style.scss";
 /* @import url(); 引入css类 */
+.el-table {
+  .warning-row {
+    // background:greenyellow;
+  }
+}
+
+  .el-table {
+    .success-row {
+    background: green;
+  }
+  }
 </style>
