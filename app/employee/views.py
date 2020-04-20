@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint, jsonify, request
 from flask_restful import Api, Resource,request
+from sqlalchemy.sql import and_
 
 from models import EmployeeAttendanceModel,EmployeeAttendanceDeviceModel
 from db import db
@@ -21,8 +22,21 @@ def ping():
 class EmployeeAttendance(Resource):
     def get(self):
         msg, code = 'ok', 200
+        starttime = request.args.get('start')
+        endtime = request.args.get('end')
+        userid = request.args.get('userid')
 
-        emp = EmployeeAttendanceModel.query.all()
+        print(starttime)
+
+        # print(starttime + '-------' + endtime)
+        condition = (1==1)
+        if starttime is not None and endtime is not None:
+            condition = and_(condition,EmployeeAttendanceModel.checktime.between(starttime,endtime))
+            
+        if userid is not None:
+            condition = and_(condition,EmployeeAttendanceModel.userid==userid)
+            
+        emp = EmployeeAttendanceModel.query.filter(condition).all()
 
         result = []
 
