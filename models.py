@@ -107,6 +107,7 @@ class EmployeeAttendanceModel(db.Model):
     snid = db.Column(db.String(200), nullable=False)
     snname = db.Column(db.String(200), nullable=False)
     unname = db.Column(db.String(200), nullable=False)
+    status = db.Column(db.Integer, nullable=False)
     created_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
 
