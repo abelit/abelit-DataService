@@ -75,6 +75,8 @@ class EmployeeAttendance(Resource):
         # 0 upload successfully, 1 upload failed, 2 repeated data
         status = 0
 
+        results = []
+
         # 根据设备snid从后台获取snname,unname
         dvc = EmployeeAttendanceDeviceModel.query.filter_by(snid=snid).first()
 
@@ -87,11 +89,12 @@ class EmployeeAttendance(Resource):
                 "code": 5501
             })
 
-
+        uchecktime = time.strftime("%Y-%m-%d %H:%M",time.strptime(checktime,"%Y/%m/%d %H:%M:%S.%f"))
         try:
             mssql = MSSQLServer(host="192.168.1.87",port=1433, username='hlcsykqehr', password='hlcsykqehr123.',database='zy_hlc',charset="utf8")
-            sql = "select userid,checktime,jlzt,sn_id,sn_name,un_name  FROM checkinout_zy where userid='{0}' and date_format(checktime,'%Y-%m-%d %H:%i')='{1}'".format(userid,time.strftime("%Y-%m-%d %H:%M",time.strptime(checktime,"%Y-%m-%d %H:%M:%S")))
+            sql = "select userid,checktime,jlzt,sn_id,sn_name,un_name  FROM checkinout_zy where userid='{0}' and format(checktime,'yyyy-MM-dd HH:mm')='{1}'".format(userid,uchecktime)
             results = mssql.select(sql)
+            print(results)
         except Exception:
             rmsg, rcode = '', 5504
         
