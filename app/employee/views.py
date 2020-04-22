@@ -94,12 +94,14 @@ class EmployeeAttendance(Resource):
             mssql = MSSQLServer(host="192.168.1.87",port=1433, username='hlcsykqehr', password='hlcsykqehr123.',database='zy_hlc',charset="utf8")
             sql = "select userid,checktime,jlzt,sn_id,sn_name,un_name  FROM checkinout_zy where userid='{0}' and format(checktime,'yyyy-MM-dd HH:mm')='{1}'".format(userid,uchecktime)
             results = mssql.select(sql)
-            print(results)
         except Exception:
+            results = []
             rmsg, rcode = '', 5504
         
         if len(results)>0:
             status = 2
+        elif rcode == 5504:
+            status = 1
         else:
             try:
                 mssql = MSSQLServer(host="192.168.1.87",port=1433, username='hlcsykqehr', password='hlcsykqehr123.',database='zy_hlc',charset="utf8")
