@@ -4,7 +4,7 @@ from collections.abc import Iterable
 print(isinstance('abc', Iterable))
 
 class MSSQLServer:
-    def __init__(self, username, password, host, port, database, charset="utf8"):
+    def __init__(self, username, password, host, port, database,login_timeout=15, charset="utf8"):
         """
         Function: __init__
         Summary: InsertHere
@@ -27,6 +27,7 @@ class MSSQLServer:
         self.port = port
         self.database = database
         self.charset = charset
+        self.login_timeout = login_timeout
 
     def __connect(self):
         """
@@ -39,7 +40,7 @@ class MSSQLServer:
         """
 
         try:
-            self.connection = pymssql.connect(host=self.host,port=self.port, user=self.username, password=self.password,database=self.database,charset=self.charset)
+            self.connection = pymssql.connect(host=self.host,port=self.port, user=self.username, password=self.password,database=self.database,login_timeout=self.login_timeout,charset=self.charset)
             print("ok")
         except Exception as cx_msg:
             msg = 'Could not connect to database: %s' % (cx_msg)
