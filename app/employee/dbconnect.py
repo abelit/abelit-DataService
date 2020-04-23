@@ -43,6 +43,7 @@ class MSSQLServer:
             print("ok")
         except Exception as cx_msg:
             msg = 'Could not connect to database: %s' % (cx_msg)
+            raise Exception(msg)
         return self.connection
 
     def __disconnect(self):
@@ -51,6 +52,7 @@ class MSSQLServer:
             self.connection.close()
         except Exception as cx_msg:
             print(cx_msg)
+            raise Exception(cx_msg)
 
     def select(self, sql, bindvars=''):
         """
@@ -67,6 +69,7 @@ class MSSQLServer:
             print("data ok")
         except Exception as cx_msg:
             print(cx_msg)
+            raise Exception(cx_msg)
         finally:
             self.__disconnect()
         return results
@@ -95,6 +98,7 @@ class MSSQLServer:
             print("The sql executing from database successfully and the sql is " + '"' + sql + '".')
         except Exception as cx_msg:
             print(cx_msg)
+            raise Exception(cx_msg)
         finally:
             # Only commit if it-s necessary.
             if commit:

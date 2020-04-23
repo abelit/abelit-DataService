@@ -95,7 +95,6 @@ class EmployeeAttendance(Resource):
             sql = "select userid,checktime,jlzt,sn_id,sn_name,un_name  FROM checkinout_zy where userid='{0}' and format(checktime,'yyyy-MM-dd HH:mm')='{1}'".format(userid,uchecktime)
             results = mssql.select(sql)
         except Exception:
-            results = []
             rmsg, rcode = '', 5504
         
         if len(results)>0:
