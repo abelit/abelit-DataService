@@ -26,6 +26,11 @@ const routes: RouteConfig[] = [
     name: 'test',
     component: () => import('../views/traffic/traffic.vue'),
   },
+  {
+    path: '/trafficMonth',
+    name: 'test',
+    component: () => import('../views/traffic/trafficMonth.vue'),
+  },
 ];
 
 const router = new VueRouter({
