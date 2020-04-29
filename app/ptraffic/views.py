@@ -346,7 +346,7 @@ def get_date_passenger_traffic():
             ('GHGY5500033026','GHGY5500033027','GeeGY5500033028','GHGY5500033029','GHGY5500033030','GHGY5500033031','GHGY5500033032',
             'GHGY5500033089','GHGY5500033090','GHGY5500033091','GHGY5500033092','GHGY5500033093','GHGY5500033094','GHGY5500033095')
             then XF_INCOUNT 
-            end),0) "H&M",
+            end),0) "HM",
         nvl(sum(case
         when XF_CAMERAID in 
             ('GHGY5500033203')
