@@ -45,13 +45,13 @@
     style="width: 100%"
      show-summary
           :summary-method="getSummaries">
-    <el-table-column type="index" width="50"></el-table-column>
+    <el-table-column type="index" width="50" label="序号"></el-table-column>
     <el-table-column
       prop="pdate"
       label="日期"
       width="150" :formatter="dateFormat">
     </el-table-column>
-    <el-table-column label="入口信息 客流(人次)10:00~22:00">
+    <el-table-column label="入口信息 客流(人次) 10:00~22:00">
       <el-table-column
         prop="psquare"
         label="沿湖广场"
