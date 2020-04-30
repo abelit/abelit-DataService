@@ -30,7 +30,7 @@
         <el-table
           :data="tableData"
           v-loading="loading"
-          style="width: 721px"
+          style="width: 691px"
           show-summary
           :summary-method="getSummaries"
         >
