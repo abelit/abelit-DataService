@@ -225,8 +225,8 @@ export default class ComponentName extends Vue {
             return;
           }
           const values = data.map((item:any) => Number(item[column.property]));
-          if (!values.every(value => isNaN(value))) {
-            sums[index] = values.reduce((prev, curr) => {
+          if (!values.every((value:any) => isNaN(value))) {
+            sums[index] = values.reduce((prev:any, curr:any) => {
               const value = Number(curr);
               if (!isNaN(value)) {
                 return prev + curr;
@@ -281,13 +281,14 @@ export default class ComponentName extends Vue {
         return re_arr;
       }
         //列表日期时间格式化
-  public dateFormat(row, column, cellValue) {
+  public dateFormat(row:any, column:any, cellValue:any) {
     //    let aa = new Date(cellValue).toUTCString();
     let XXXXTime = Date.parse(cellValue);
     //console.log(XXXXTime);
-    return cellValue ? fecha.format(new Date(XXXXTime - 8 * 3600 * 1000), 'yyyy-MM-dd') : '';
+    let dayNames: any[] = ['周一','周二','周三','周四','周五','周六','周日']
+    return cellValue ? fecha.format(new Date(XXXXTime - 8 * 3600 * 1000), 'yyyy-MM-dd') + ' (' + dayNames[ (new Date(XXXXTime - 8 * 3600 * 1000)).getUTCDay()] +')' : '';
   }
-  public numberFormat(row, column, cellValue){
+  public numberFormat(row:any, column:any, cellValue:any){
     return cellValue.toLocaleString()
   }
 }
