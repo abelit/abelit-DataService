@@ -21,7 +21,7 @@
         >查看中奖详情</b-button
       >
       <div id="info">
-        <p>填写真实姓名+电话</p>
+        <p>*请填写真实姓名+电话</p>
         <p>5月10日20:00 将抽取3名幸运“花粉” 获赠“爱的赠礼”一份</p>
       </div>
     </div>
@@ -78,7 +78,7 @@
       </div>
       <div id="list" v-else>
         <b-alert show variant="danger" style="margin-top:60px;"
-          >未到开奖时间，稍后为您揭晓中将喜讯...</b-alert
+          >未到开奖时间，稍后为您揭晓中奖喜讯...</b-alert
         >
         <b-button type="submit" block variant="outline-primary" @click="btn3" style="margin-top:10px;"
         >返回首页</b-button
