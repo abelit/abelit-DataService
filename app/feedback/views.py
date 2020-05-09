@@ -3,6 +3,7 @@ from flask_restful import Api, Resource,request
 
 from models import GiftCardModel, ShopCardModel, ActivityParticipantModel
 from db import db
+import time
 
 feedback = Blueprint('feedback', __name__)
 
@@ -299,7 +300,8 @@ class ActivityParticipant(Resource):
                 "name": a.name,
                 "phone": a.phone,
                 "signdate": a.signdate,
-                "label": a.label
+                "label": a.label,
+                "servertime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             })
 
         return  jsonify(result)
@@ -327,11 +329,31 @@ class ActivityParticipant(Resource):
             code = 500
             db.session.rollback()
 
-        return jsonify({"msg": msg,"code": code})
+        data = {"msg": msg,"code": code,"servertime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}
+        # return jsonify(data),code
+
+        return data,code
 
 
-    def put(self, id):
-        return {}
+    def put(self):
+        req = request.json
+        msg, code = "ok", 200
+        
+        try:
+            for p in req['phone_arr']:
+                act = ActivityParticipantModel.query.filter_by(phone=p).first()
+                act.label = 1
+                db.session.add(act)
+                db.session.commit()
+            msg = "ok"
+            code = 200
+        except Exception:
+            msg = "failed"
+            code = 500
+            db.session.rollback()
+            
+        data = {"msg": msg,"code": code, "servertime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) }
+        return data,code
 
     """
     API: 
