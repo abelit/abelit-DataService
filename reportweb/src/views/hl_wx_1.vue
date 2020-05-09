@@ -90,7 +90,7 @@ export default {
         phone: "",
       },
       items: [],
-      hours: 20,
+      hours: '2020-05-10 20:00:00',
       show: true,
       currentPage: 1,
       isOpen: false,
@@ -137,7 +137,7 @@ export default {
         .get("/api/feedback/activity")
         .then((res) => {
           console.log(new Date(res.data[0].servertime).getHours());
-          if (new Date(res.data[0].servertime).getHours() >= this.hours) {
+          if (new Date(res.data[0].servertime) >= new Date(this.hours)) {
             if (res.status == 200) {
               var reg = /^(\d{3})\d*(\d{4})$/;
 
