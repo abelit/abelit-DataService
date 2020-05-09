@@ -54,6 +54,13 @@
         >返回首页</b-button
       >
       </b-form>
+      
+     <div v-show="!show">
+         <b-alert show variant="danger" style="margin-top:60px;"
+          >本次活动报名已结束！</b-alert>
+         <b-button type="submit" block variant="outline-primary" @click="btn3" style="margin-top:10px;"
+        >返回首页</b-button>
+     </div>
 
     </div>
     <div id="page2" style="z-index:2;top:100px;" v-if="currentPage == 3">
@@ -129,7 +136,19 @@ export default {
       this.form.tel = "";
     },
     btn1() {
-      this.currentPage = 2;
+      this.$axios
+        .get("/api/feedback/activity")
+        .then((res) => {
+          if (new Date(res.data[0].servertime) >= new Date(this.hours)) {
+            this.show = false;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("填报异常，请检查后再次提交");
+        });
+        
+        this.currentPage = 2;
     },
     btn2() {
       this.currentPage = 3;
