@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, jsonify, request
 from flask_restful import Api, Resource,request
 
-from models import GiftCardModel, ShopCardModel
+from models import GiftCardModel, ShopCardModel, ActivityParticipantModel
 from db import db
 
 feedback = Blueprint('feedback', __name__)
@@ -209,3 +209,138 @@ shop card:
     api: /api/feedback/shop
     method: GET
 """
+
+class GiftCardResource(Resource):
+    def get(self):
+        gift = GiftCardModel.query.all()
+
+        result = []
+        
+        for g in gift:
+            result.append({
+                "title_confirmdate": g.title_confirmdate,
+                "base_brdname": g.base_brdname,
+                "base_shopno": g.base_shopno,
+                "base_company": g.base_company,
+                "base_expiredate": g.base_expiredate,
+
+                "mem_check": g.mem_check,
+                "mem_silverdiscount": g.mem_silverdiscount,
+                "mem_diamonddiscount": g.mem_diamonddiscount,
+                "mem_gloddiscount": g.mem_gloddiscount,
+                "mem_other": g.mem_other,
+
+                "sign_signature": g.sign_signature,
+                "sign_contact": g.sign_contact,
+                "sign_call": g.sign_call,
+                "sign_email": g.sign_email,
+                "sign_replydate": g.sign_replydate,
+            })
+
+        return  jsonify(result)
+
+    def post(self):
+        req = request.json
+
+        code = 200
+        msg = "ok"
+
+        # print(req.get('username'))
+        # pass
+        title_confirmdate = req.get('title_confirmdate')
+
+        base_brdname = req.get('base_brdname')
+        base_shopno = req.get('base_shopno')
+        base_company = req.get('base_company')
+        base_expiredate = req.get('base_expiredate')
+
+        mem_check = req.get('mem_check')
+        mem_silverdiscount = req.get('mem_silverdiscount')
+        mem_diamonddiscount = req.get('mem_diamonddiscount')
+        mem_gloddiscount = req.get('mem_gloddiscount')
+        mem_other = req.get('mem_other')
+
+        sign_signature = req.get('sign_signature')
+        sign_contact = req.get('sign_contact')
+        sign_call = req.get('sign_call')
+        sign_email = req.get('sign_email')
+        sign_replydate = req.get('sign_replydate')
+        
+
+        gift = GiftCardModel(title_confirmdate=title_confirmdate,base_brdname=base_brdname,base_shopno=base_shopno,
+        base_company=base_company,base_expiredate=base_expiredate,mem_check=mem_check,mem_silverdiscount=mem_silverdiscount,mem_diamonddiscount=mem_diamonddiscount,
+        mem_gloddiscount=mem_gloddiscount,mem_other=mem_other,sign_signature=sign_signature,sign_contact=sign_contact,sign_call=sign_call,sign_email=sign_email,
+        sign_replydate=sign_replydate)
+
+        try:
+            db.session.add(gift)
+            db.session.commit()
+            msg = "ok"
+            code = 200
+        except Exception:
+            msg = "failed"
+            code = 500
+            db.session.rollback()
+
+        return jsonify({"msg": msg,"code": code})
+
+
+    def put(self, id):
+        return {}
+        
+class ActivityParticipant(Resource):
+    def get(self):
+        activity = ActivityParticipantModel.query.all()
+
+        result = []
+        
+        for a in activity:
+            result.append({
+                "name": a.name,
+                "phone": a.phone,
+                "signdate": a.signdate,
+                "label": a.label
+            })
+
+        return  jsonify(result)
+
+    def post(self):
+        req = request.json
+
+        code = 200
+        msg = "ok"
+
+        name = req.get('name')
+        phone = req.get('phone')
+        signdate = req.get('signdate')
+        label = req.get('label')
+
+        act = ActivityParticipantModel(name=name, phone=phone, signdate=signdate, label=label)
+
+        try:
+            db.session.add(act)
+            db.session.commit()
+            msg = "ok"
+            code = 200
+        except Exception:
+            msg = "failed"
+            code = 500
+            db.session.rollback()
+
+        return jsonify({"msg": msg,"code": code})
+
+
+    def put(self, id):
+        return {}
+
+    """
+    API: 
+        URL: http://127.0.0.1:5060/api/feedback/activity
+            POST:
+                {
+                    "name": "Abelit",
+                    "phone": "15285649896",
+                    "label": 1
+                }
+            GET:
+    """

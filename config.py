@@ -57,11 +57,11 @@ class BaseConfig(object):
     # 使用docker环境时把127.0.0.1改为db的容器名称
     DIALECT = 'mysql'
     DRIVER = 'pymysql'
-    USERNAME = 'ehr'
-    PASSWORD = ''
-    HOST = '10.46.101.70'
+    USERNAME = 'root'
+    PASSWORD = 'root'
+    HOST = '10.50.0.210'
     PORT = 3306
-    DATABASE = 'ehrdb'
+    DATABASE = 'dataservice'
     SQLALCHEMY_DATABASE_URI = '{}+{}://{}:{}@{}:{}/{}?charset=utf8'.format(
         DIALECT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE
     )

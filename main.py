@@ -26,11 +26,11 @@ from app.home.views import home as home_blueprint
 
 from app.feedback.views import feedback as feedback_blueprint
 from app.feedback.views import api as feedbackapi
-from app.feedback.views import GiftCardResource,ShopCardResource
+from app.feedback.views import GiftCardResource,ShopCardResource,ActivityParticipant
 
-from app.employee.views import employee as employee_blueprint
-from app.employee.views import api as employeeapi
-from app.employee.views import EmployeeAttendance,EmployeeAttendanceDevice
+# from app.employee.views import employee as employee_blueprint
+# from app.employee.views import api as employeeapi
+# from app.employee.views import EmployeeAttendance,EmployeeAttendanceDevice
 
 # import ptraffic blueprint
 from app.ptraffic.views import ptraffic as ptraffic_blueprint
@@ -82,12 +82,13 @@ app.register_blueprint(home_blueprint)
 # 添加资源 feedback & 注册自定义blueprint模块
 feedbackapi.add_resource(GiftCardResource, '/gift')
 feedbackapi.add_resource(ShopCardResource, '/shop')
+feedbackapi.add_resource(ActivityParticipant, '/activity')
 app.register_blueprint(feedback_blueprint, url_prefix="/api/feedback")
 
 # import employee
-employeeapi.add_resource(EmployeeAttendance, '/attend')
-employeeapi.add_resource(EmployeeAttendanceDevice, '/device')
-app.register_blueprint(employee_blueprint, url_prefix="/api/employee")
+# employeeapi.add_resource(EmployeeAttendance, '/attend')
+# employeeapi.add_resource(EmployeeAttendanceDevice, '/device')
+# app.register_blueprint(employee_blueprint, url_prefix="/api/employee")
 
 # import ptraffic
 app.register_blueprint(ptraffic_blueprint, url_prefix="/api/ptraffic")
