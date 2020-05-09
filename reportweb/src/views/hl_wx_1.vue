@@ -107,11 +107,13 @@ export default {
       this.$axios
         .post("/api/feedback/activity", this.form)
         .then((res) => {
-          console.log(res);
-          if (res.status == 200) {
+          // console.log(res);
+          if (res.data.code == 200) {
             alert("数据提交成功");
-          } else {
-            alert("填报异常，请检查后再次提交");
+          } 
+          if (res.data.code == 501)
+          {
+            alert("该手机号已经报名！");
           }
         })
         .catch((error) => {

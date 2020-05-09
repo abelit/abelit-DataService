@@ -4,6 +4,7 @@ from flask_restful import Api, Resource,request
 from models import GiftCardModel, ShopCardModel, ActivityParticipantModel
 from db import db
 import time
+from sqlalchemy.exc import IntegrityError
 
 feedback = Blueprint('feedback', __name__)
 
@@ -303,6 +304,15 @@ class ActivityParticipant(Resource):
                 "label": a.label,
                 "servertime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             })
+        
+        if result == []:
+            result.append({
+                "name": "",
+                "phone": "",
+                "signdate": "",
+                "label": "",
+                "servertime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            })
 
         return  jsonify(result)
 
@@ -324,15 +334,19 @@ class ActivityParticipant(Resource):
             db.session.commit()
             msg = "ok"
             code = 200
+        except IntegrityError:
+            msg, code = "Integrity Error", 501
         except Exception:
             msg = "failed"
             code = 500
             db.session.rollback()
+        finally:
+            db.session.close()
 
         data = {"msg": msg,"code": code,"servertime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}
         # return jsonify(data),code
 
-        return data,code
+        return data
 
 
     def put(self):
