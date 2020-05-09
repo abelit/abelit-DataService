@@ -57,7 +57,7 @@
       
      <div v-show="!show">
          <b-alert show variant="danger" style="margin-top:60px;"
-          >本次活动报名已结束！</b-alert>
+          >本次活动报名已结束，期待您及时参加下一次活动！</b-alert>
          <b-button type="submit" block variant="outline-primary" @click="btn3" style="margin-top:10px;"
         >返回首页</b-button>
      </div>
@@ -78,7 +78,7 @@
       </div>
       <div id="list" v-else>
         <b-alert show variant="danger" style="margin-top:60px;"
-          >未到开奖时间，请等候...</b-alert
+          >未到开奖时间，稍后为您揭晓中将喜讯...</b-alert
         >
         <b-button type="submit" block variant="outline-primary" @click="btn3" style="margin-top:10px;"
         >返回首页</b-button
