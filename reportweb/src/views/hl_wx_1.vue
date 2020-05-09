@@ -105,7 +105,7 @@ export default {
       }
 
       this.$axios
-        .post("http://10.46.100.220:5060/api/feedback/activity", this.form)
+        .post("/api/feedback/activity", this.form)
         .then((res) => {
           console.log(res);
           if (res.status == 200) {
@@ -132,7 +132,7 @@ export default {
     btn2() {
       this.currentPage = 3;
       this.$axios
-        .get("http://10.46.100.220:5060/api/feedback/activity")
+        .get("/api/feedback/activity")
         .then((res) => {
           console.log(new Date(res.data[0].servertime).getHours());
           if (new Date(res.data[0].servertime).getHours() >= this.hours) {

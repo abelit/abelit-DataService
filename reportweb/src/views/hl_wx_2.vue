@@ -58,7 +58,7 @@ export default {
     },
     getData() {
       this.$axios
-        .get("http://10.46.100.220:5060/api/feedback/activity")
+        .get("/api/feedback/activity")
         .then((res) => {
           console.log(res);
           if (res.status == 200) {
@@ -76,7 +76,7 @@ export default {
     upDate(){
 
       this.$axios
-        .put("http://10.46.100.220:5060/api/feedback/activity", {phone_arr:this.phone_arr})
+        .put("/api/feedback/activity", {phone_arr:this.phone_arr})
         .then((res) => {
           console.log(res);
           if (res.status == 200) {
