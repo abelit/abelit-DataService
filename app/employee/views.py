@@ -54,7 +54,8 @@ class EmployeeAttendance(Resource):
                 "checktime": e.checktime,
                 "snid": e.snid,
                 "snname": e.snname,
-                "unname": e.unname
+                "unname": e.unname,
+                "image": e.image
             })
 
         return jsonify(result)
@@ -72,6 +73,7 @@ class EmployeeAttendance(Resource):
         snid = req_data.get('snid')
         snname = req_data.get('snname')
         unname = req_data.get('unname')
+        image = req_data.get('image')
         # 0 upload successfully, 1 upload failed, 2 repeated data
         status = 0
 
@@ -112,7 +114,7 @@ class EmployeeAttendance(Resource):
                 rmsg, rcode = 'Failed to add attendance data to remote', 5503
                 status = 1
 
-        emp_attend = EmployeeAttendanceModel(userid=userid, username=username, checktime=checktime, temperature=temperature,snid=snid,snname=snname,unname=unname,status=status)
+        emp_attend = EmployeeAttendanceModel(userid=userid, username=username, checktime=checktime, temperature=temperature,snid=snid,snname=snname,unname=unname,image=image,status=status)
         try:
             db.session.add(emp_attend)
             db.session.commit()
