@@ -108,7 +108,7 @@ class EmployeeAttendanceModel(db.Model):
     snname = db.Column(db.String(200), nullable=False)
     unname = db.Column(db.String(200), nullable=False)
     image = db.Column(db.Text, nullable=True)
-    status = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.Integer, nullable=False,doc="0: 上传成功,1: 上传失败 ,2: 远程已有数据")
     created_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
 
