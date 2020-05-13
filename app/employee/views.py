@@ -179,7 +179,7 @@ def resume_task(id):
     scheduler.resume_job(id)
     return "Success!"
 
-@employee.route('/scheduler/get/')
+@employee.route('/scheduler/get')
 def  get_task():
     #获取
     jobs=scheduler.get_jobs()
@@ -192,10 +192,13 @@ def remove_task(id):
     scheduler.delete_job(id)
     return "Success!"
 
-@employee.route('/scheduler/add', methods=['GET','POST'])
+@employee.route('/scheduler/add')
 def add_task():
-    scheduler.add_job(func=task1, id='1', args=(1, 2), trigger='interval', seconds=5, replace_existing=True)
+    id = request.args.get('id',default='1001',type=str)
+    seconds = request.args.get('seconds',default=5,type=5)
+
+    scheduler.add_job(func=task1, id=id, args=(1001, 2000), trigger='interval', seconds=seconds, replace_existing=True)
     return 'sucess!'
 
 def task1(a, b):
-    print(str(a) + ' ' + str(b))
+    print(str(a) + ' <---> ' + str(b))
