@@ -41,10 +41,14 @@ def create_employee(_app):
     from app.employee.views import employee as employee_blueprint
     from app.employee.views import api as employeeapi
     from app.employee.views import EmployeeAttendance,EmployeeAttendanceDevice
+    from app.employee.views import scheduler
 
     employeeapi.add_resource(EmployeeAttendance, '/attend')
     employeeapi.add_resource(EmployeeAttendanceDevice, '/device')
     _app.register_blueprint(employee_blueprint, url_prefix="/api/employee")
+
+    scheduler.init_app(app=_app)
+    scheduler.start()
 
 
 def create_common(_app):
@@ -57,7 +61,6 @@ def create_app():
     # 自定义模块
     from db import db
     from config import config
-
 
     # 创建flask实例对象
     _app = Flask(__name__)
@@ -76,6 +79,10 @@ def create_app():
 
     # 创建JWT实例对象
     jwt = JWTManager(_app)
+
+
+    def syncdata():
+        print("sync data ...")
 
     @_app.before_first_request
     def process_first_request():
@@ -110,9 +117,6 @@ def create_app():
     create_feedback(_app) if 'feedback' in _app.config['APPS'] else None
     create_traffic(_app) if 'traffic' in _app.config['APPS'] else None
     create_employee(_app) if 'employee' in _app.config['APPS'] else None
-
-    def syncdata():
-        print("sync data ...")
 
     return _app
     

@@ -167,38 +167,87 @@ class EmployeeAttendanceDevice(Resource):
 
         return jsonify({"msg": msg,"code": code})
 
+
+
 @employee.route('/scheduler/pause/<string:id>/')
 def pause_task(id):
     #暂停
-    scheduler.pause_job(id)
-    return "Success!"
+    try:
+        scheduler.pause_job(id)
+        msg, code = "ok", 200
+    except Exception:
+        msg, code = "failed to pause job!", 500
+
+    return jsonify({
+        "msg": msg,
+        "code": code
+    })
     
 @employee.route('/scheduler/resume/<string:id>/')
 def resume_task(id):
     #恢复
-    scheduler.resume_job(id)
-    return "Success!"
+    try:
+        scheduler.resume_job(id)
+        msg, code = "ok", 200
+    except Exception:
+        msg, code = "failed to resume job!", 500
+
+    return jsonify({
+        "msg": msg,
+        "code": code
+    })
 
 @employee.route('/scheduler/get')
 def  get_task():
     #获取
     jobs=scheduler.get_jobs()
-    print(jobs)
-    return 'Success!'
+
+    result = []
+    
+    if jobs is not None:
+        for job in jobs:
+            result.append({
+                "job_id": job.id,
+                "job_name": job.name,
+                "job_task": job.func_ref,
+                "job_trigger": str(job.trigger)
+            })
+
+    print(result)
+    return jsonify(result)
 
 @employee.route('/scheduler/delete/<string:id>/')
 def remove_task(id):
     #移除
-    scheduler.delete_job(id)
-    return "Success!"
+    try:
+        scheduler.delete_job(id)
+        msg, code = "ok", 200
+    except Exception:
+        msg, code = "failed to delete job!", 500
+
+    return jsonify({
+        "msg": msg,
+        "code": code
+    })
 
 @employee.route('/scheduler/add')
 def add_task():
     id = request.args.get('id',default='1001',type=str)
-    seconds = request.args.get('seconds',default=5,type=5)
+    seconds = request.args.get('seconds',default=5,type=int)
+    name = request.args.get('name', default='考勤数据同步',type=str)
 
-    scheduler.add_job(func=task1, id=id, args=(1001, 2000), trigger='interval', seconds=seconds, replace_existing=True)
-    return 'sucess!'
+    try:
+        scheduler.add_job(func=syncdata_task, id=id, name=name, args=(1001, 2000), trigger='interval', seconds=seconds, replace_existing=True)
+        msg, code = "ok", 200
+    except Exception:
+        msg, code = "failed to create job!", 500
 
-def task1(a, b):
+    return jsonify({
+        "msg": msg,
+        "code": code
+    })
+
+
+def syncdata_task(a, b):
     print(str(a) + ' <---> ' + str(b))
+

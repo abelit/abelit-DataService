@@ -54,7 +54,7 @@ class BaseConfig(object):
     SECRET_KEY = 'SFASDFAS$%@#$Ddfdfd523SDFGKPOXf56734453$%4z(fdasFSAD'
 
     # 运行apps
-    APPS = ['feedback','traffic']
+    APPS = ['employee']
 
     # Scheduler
     SCHEDULER_ENABLE = False
