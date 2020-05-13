@@ -56,6 +56,11 @@ class BaseConfig(object):
     # 运行apps
     APPS = ['feedback','traffic']
 
+    # Scheduler
+    SCHEDULER_ENABLE = False
+    SCHEDULER_ID = '1001'
+    SCHEDULER_INTERVAL = 5
+
     # 配置数据库
     # 使用docker环境时把127.0.0.1改为db的容器名称
     DIALECT = 'mysql'

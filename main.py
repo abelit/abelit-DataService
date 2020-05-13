@@ -77,6 +77,17 @@ def create_app():
     # 创建JWT实例对象
     jwt = JWTManager(_app)
 
+    @_app.before_first_request
+    def process_first_request():
+        print("首次访问：")
+        if _app.config['SCHEDULER_ENABLE']:
+            from flask_apscheduler import APScheduler
+            scheduler = APScheduler()
+            # 添加job
+            scheduler.add_job(func=syncdata, id=_app.config['SCHEDULER_ID'], trigger='interval', seconds=_app.config['SCHEDULER_INTERVAL'], replace_existing=True)
+            scheduler.init_app(app=_app)
+            scheduler.start()
+        
     # 中间件
     @_app.before_request
     def process_start_request():
@@ -100,8 +111,11 @@ def create_app():
     create_traffic(_app) if 'traffic' in _app.config['APPS'] else None
     create_employee(_app) if 'employee' in _app.config['APPS'] else None
 
-    return _app
+    def syncdata():
+        print("sync data ...")
 
+    return _app
+    
 
 if __name__ == "__main__":
     app = create_app()

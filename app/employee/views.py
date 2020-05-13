@@ -2,6 +2,7 @@ from flask import Flask, Blueprint, jsonify, request
 from flask_restful import Api, Resource,request
 from sqlalchemy.sql import and_
 import time
+from flask_apscheduler import APScheduler
 
 from models import EmployeeAttendanceModel,EmployeeAttendanceDeviceModel
 from db import db
@@ -9,14 +10,12 @@ from db import db
 from app.employee.dbconnect import MSSQLServer
 
 employee = Blueprint('employee', __name__)
-
 api = Api(employee)
 
+scheduler = APScheduler()
 
 @employee.route('/ping')
 def ping():
-    results = mssql.select(sql)
-    print(results[0][1])
     return jsonify({
         "ping": "Pong!",
         "ip": request.remote_addr,
@@ -167,3 +166,36 @@ class EmployeeAttendanceDevice(Resource):
             db.session.rollback()
 
         return jsonify({"msg": msg,"code": code})
+
+@employee.route('/scheduler/pause/<string:id>/')
+def pause_task(id):
+    #暂停
+    scheduler.pause_job(id)
+    return "Success!"
+    
+@employee.route('/scheduler/resume/<string:id>/')
+def resume_task(id):
+    #恢复
+    scheduler.resume_job(id)
+    return "Success!"
+
+@employee.route('/scheduler/get/')
+def  get_task():
+    #获取
+    jobs=scheduler.get_jobs()
+    print(jobs)
+    return 'Success!'
+
+@employee.route('/scheduler/delete/<string:id>/')
+def remove_task(id):
+    #移除
+    scheduler.delete_job(id)
+    return "Success!"
+
+@employee.route('/scheduler/add', methods=['GET','POST'])
+def add_task():
+    scheduler.add_job(func=task1, id='1', args=(1, 2), trigger='interval', seconds=5, replace_existing=True)
+    return 'sucess!'
+
+def task1(a, b):
+    print(str(a) + ' ' + str(b))
