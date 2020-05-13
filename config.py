@@ -53,6 +53,9 @@ class BaseConfig(object):
     # 配置Flask加密密钥
     SECRET_KEY = 'SFASDFAS$%@#$Ddfdfd523SDFGKPOXf56734453$%4z(fdasFSAD'
 
+    # 运行apps
+    APPS = ['feedback','traffic']
+
     # 配置数据库
     # 使用docker环境时把127.0.0.1改为db的容器名称
     DIALECT = 'mysql'
