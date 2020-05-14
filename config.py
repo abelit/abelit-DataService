@@ -57,9 +57,11 @@ class BaseConfig(object):
     APPS = ['employee']
 
     # Scheduler
-    SCHEDULER_ENABLE = False
-    SCHEDULER_ID = '1001'
-    SCHEDULER_INTERVAL = 5
+    GLOBAL_SCHEDULER_ENABLE = False
+    GLOBAL_SCHEDULER_ID = '1001'
+    GLOBAL_SCHEDULER_INTERVAL = 5
+
+    APP_SCHEDULER_ENABLE = True
 
     # 配置数据库
     # 使用docker环境时把127.0.0.1改为db的容器名称

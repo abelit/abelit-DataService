@@ -41,21 +41,25 @@ def create_employee(_app):
     from app.employee.views import employee as employee_blueprint
     from app.employee.views import api as employeeapi
     from app.employee.views import EmployeeAttendance,EmployeeAttendanceDevice
-    from app.employee.views import scheduler
 
     employeeapi.add_resource(EmployeeAttendance, '/attend')
     employeeapi.add_resource(EmployeeAttendanceDevice, '/device')
     _app.register_blueprint(employee_blueprint, url_prefix="/api/employee")
-
-    scheduler.init_app(app=_app)
-    scheduler.start()
-
 
 def create_common(_app):
     from app.home.views import home as home_blueprint
 
     # 注册自定义blueprint模块
     _app.register_blueprint(home_blueprint)
+
+def create_scheduler(_app):
+    from app.scheduler.views import schedulerbpt as scheduler_blueprint
+    from app.scheduler.views import scheduler
+
+    _app.register_blueprint(scheduler_blueprint, url_prefix="/api/scheduler")
+   
+    scheduler.init_app(_app)
+    scheduler.start()
 
 def create_app():
     # 自定义模块
@@ -87,11 +91,11 @@ def create_app():
     @_app.before_first_request
     def process_first_request():
         print("首次访问：")
-        if _app.config['SCHEDULER_ENABLE']:
+        if _app.config['GLOBAL_SCHEDULER_ENABLE']:
             from flask_apscheduler import APScheduler
             scheduler = APScheduler()
             # 添加job
-            scheduler.add_job(func=syncdata, id=_app.config['SCHEDULER_ID'], trigger='interval', seconds=_app.config['SCHEDULER_INTERVAL'], replace_existing=True)
+            scheduler.add_job(func=syncdata, id=_app.config['GLOBAL_SCHEDULER_ID'], trigger='interval', seconds=_app.config['GLOBAL_SCHEDULER_INTERVAL'], replace_existing=True)
             scheduler.init_app(app=_app)
             scheduler.start()
         
@@ -113,7 +117,7 @@ def create_app():
         return jsonify({"err": 404, "msg": "page not found"}), 404
 
     create_common(_app)
-
+    create_scheduler(_app) if _app.config['APP_SCHEDULER_ENABLE'] and (not _app.config['GLOBAL_SCHEDULER_ENABLE']) else None
     create_feedback(_app) if 'feedback' in _app.config['APPS'] else None
     create_traffic(_app) if 'traffic' in _app.config['APPS'] else None
     create_employee(_app) if 'employee' in _app.config['APPS'] else None

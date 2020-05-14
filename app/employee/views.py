@@ -8,6 +8,7 @@ from models import EmployeeAttendanceModel,EmployeeAttendanceDeviceModel
 from db import db
 
 from app.employee.dbconnect import MSSQLServer
+import pymssql
 
 employee = Blueprint('employee', __name__)
 api = Api(employee)
@@ -167,87 +168,33 @@ class EmployeeAttendanceDevice(Resource):
 
         return jsonify({"msg": msg,"code": code})
 
-
-
-@employee.route('/scheduler/pause/<string:id>/')
-def pause_task(id):
-    #暂停
+@employee.route("/syncdata")
+def sync_data():
+    emp = []
+    code, msg = 200, "Sync data ok."
     try:
-        scheduler.pause_job(id)
-        msg, code = "ok", 200
-    except Exception:
-        msg, code = "failed to pause job!", 500
+        emp = EmployeeAttendanceModel.query.filter_by(status=1).all()
+    except Exception as err:
+        print(err)
 
-    return jsonify({
-        "msg": msg,
-        "code": code
-    })
+    if len(emp) == 0:
+        return 'No data need sync.'
+ 
+    for i in emp:
+        # print(i.userid)
+        try:
+            mssql = MSSQLServer(host="192.168.1.87",port=1433, username='hlcsykqehr', password='hlcsykqehr123.',database='zy_hlc',charset="utf8")
+            addsql = "insert into checkinout_zy(userid,checktime,sn_id,sn_name,un_name) values('{0}','{1}','{2}','{3}','{4}')".format(i.userid, i.checktime,i.snid,i.snname,i.unname)
+            mssql.execute(addsql)
+            i.status = 0
+            code, msg = 200, 'ok'
+        except pymssql.IntegrityError:
+            # print("hhah uique ............")
+            i.status = 2
+            # raise Exception(pymssql.IntegrityError)
+        except Exception as err:
+            print(err)
+            code, msg = 200, 'failed write data to remote database.' 
+
+    return msg,code
     
-@employee.route('/scheduler/resume/<string:id>/')
-def resume_task(id):
-    #恢复
-    try:
-        scheduler.resume_job(id)
-        msg, code = "ok", 200
-    except Exception:
-        msg, code = "failed to resume job!", 500
-
-    return jsonify({
-        "msg": msg,
-        "code": code
-    })
-
-@employee.route('/scheduler/get')
-def  get_task():
-    #获取
-    jobs=scheduler.get_jobs()
-
-    result = []
-    
-    if jobs is not None:
-        for job in jobs:
-            result.append({
-                "job_id": job.id,
-                "job_name": job.name,
-                "job_task": job.func_ref,
-                "job_trigger": str(job.trigger)
-            })
-
-    print(result)
-    return jsonify(result)
-
-@employee.route('/scheduler/delete/<string:id>/')
-def remove_task(id):
-    #移除
-    try:
-        scheduler.delete_job(id)
-        msg, code = "ok", 200
-    except Exception:
-        msg, code = "failed to delete job!", 500
-
-    return jsonify({
-        "msg": msg,
-        "code": code
-    })
-
-@employee.route('/scheduler/add')
-def add_task():
-    id = request.args.get('id',default='1001',type=str)
-    seconds = request.args.get('seconds',default=5,type=int)
-    name = request.args.get('name', default='考勤数据同步',type=str)
-
-    try:
-        scheduler.add_job(func=syncdata_task, id=id, name=name, args=(1001, 2000), trigger='interval', seconds=seconds, replace_existing=True)
-        msg, code = "ok", 200
-    except Exception:
-        msg, code = "failed to create job!", 500
-
-    return jsonify({
-        "msg": msg,
-        "code": code
-    })
-
-
-def syncdata_task(a, b):
-    print(str(a) + ' <---> ' + str(b))
-
