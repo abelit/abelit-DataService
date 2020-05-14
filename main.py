@@ -123,8 +123,10 @@ def create_app():
     create_employee(_app) if 'employee' in _app.config['APPS'] else None
 
     return _app
-    
+
+app = create_app()
+
 
 if __name__ == "__main__":
-    app = create_app()
+    #app = create_app()
     app.run(host="0.0.0.0", port=5060)
