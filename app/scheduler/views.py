@@ -11,7 +11,7 @@ def pause_task(id):
         scheduler.pause_job(id)
         msg, code = "ok", 200
     except Exception:
-        msg, code = "failed to pause job!", 500
+        msg, code = "failed to pause job!", 5001
 
     return jsonify({
         "msg": msg,
@@ -25,7 +25,7 @@ def resume_task(id):
         scheduler.resume_job(id)
         msg, code = "ok", 200
     except Exception:
-        msg, code = "failed to resume job!", 500
+        msg, code = "failed to resume job!", 5001
 
     return jsonify({
         "msg": msg,
@@ -61,7 +61,7 @@ def remove_task(id):
         scheduler.delete_job(id)
         msg, code = "ok", 200
     except Exception:
-        msg, code = "failed to delete job!", 500
+        msg, code = "failed to delete job!", 5001
 
     return jsonify({
         "msg": msg,
@@ -80,7 +80,7 @@ def add_task():
         msg, code = "ok", 200
     except Exception as err:
         print(err)
-        msg, code = "failed to create job!", 500
+        msg, code = "failed to create job!", 5001
 
     return jsonify({
         "msg": msg,
@@ -91,7 +91,10 @@ def sync_data(url,jobid):
     import urllib.request
     # print(url+'api/employee/syncdata')
     scheduler.pause_job(jobid)
-    urllib.request.urlopen(url+'api/employee/syncdata')
+    try:
+        urllib.request.urlopen(url+'api/employee/syncdata')
+    except Exception:
+        pass
     scheduler.resume_job(jobid)
         
     

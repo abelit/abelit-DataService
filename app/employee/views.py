@@ -163,7 +163,7 @@ class EmployeeAttendanceDevice(Resource):
             db.session.commit()
             msg, code = 'ok', 200
         except Exception:
-            msg, code = 'failed', 500
+            msg, code = 'failed', 5001
             db.session.rollback()
 
         return jsonify({"msg": msg,"code": code})
