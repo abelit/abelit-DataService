@@ -31,8 +31,6 @@ class EmployeeAttendance(Resource):
         endtime = request.args.get('end')
         userid = request.args.get('userid')
 
-        print(starttime)
-
         # print(starttime + '-------' + endtime)
         condition = (1==1)
         if starttime is not None and endtime is not None:
@@ -55,7 +53,8 @@ class EmployeeAttendance(Resource):
                 "snid": e.snid,
                 "snname": e.snname,
                 "unname": e.unname,
-                "image": e.image
+                "image": e.image,
+                "status": e.status
             })
 
         return jsonify(result)
@@ -174,8 +173,8 @@ def sync_data():
     code, msg = 200, "Sync data ok."
     try:
         emp = EmployeeAttendanceModel.query.filter_by(status=1).all()
-    except Exception as err:
-        print(err)
+    except Exception:
+        pass
 
     if len(emp) == 0:
         return 'No data need sync.'
@@ -192,8 +191,7 @@ def sync_data():
             # print("hhah uique ............")
             i.status = 2
             # raise Exception(pymssql.IntegrityError)
-        except Exception as err:
-            print(err)
+        except Exception:
             code, msg = 200, 'failed write data to remote database.' 
 
     return msg,code

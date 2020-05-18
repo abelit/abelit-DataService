@@ -51,7 +51,7 @@ def  get_task():
                 "job_status": "running" if job.next_run_time else "not running"
             })
 
-    print(result)
+    # print(result)
     return jsonify(result)
 
 @schedulerbpt.route('/delete/<string:id>/')
@@ -78,8 +78,8 @@ def add_task():
     try:
         scheduler.add_job(func=sync_data, id=id, args=(request.url_root,id), name=name, trigger='interval', seconds=seconds, replace_existing=False)
         msg, code = "ok", 200
-    except Exception as err:
-        print(err)
+    except Exception:
+        # print(err)
         msg, code = "failed to create job!", 5001
 
     return jsonify({
