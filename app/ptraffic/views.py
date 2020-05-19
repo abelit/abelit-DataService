@@ -306,7 +306,7 @@ def get_time_passenger_traffic():
         xf_tc_countdata.xf_cameraid=xf_tc_pass.xf_cameraid and
         xf_tc_countdata.xf_starthour between 10 and 21 and
         to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd') between to_date('{0}','yyyy-mm-dd') and to_Date('{1}','yyyy-mm-dd')
-        group by  to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd')
+        group by  to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd') order by 1
         """
     results = oracle.select(sql_text.format(starttime, endtime))
 
@@ -391,7 +391,7 @@ def get_date_passenger_traffic():
         xf_tc_countdata.xf_cameraid=xf_tc_pass.xf_cameraid and
         xf_tc_countdata.xf_starthour between 10 and 21 and
         to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd') between to_date('{0}','yyyy-mm-dd') and to_Date('{1}','yyyy-mm-dd')
-        group by  to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd')
+        group by  to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd') order by 1
         """
     results = oracle.select(sql_text.format(starttime, endtime))
 
