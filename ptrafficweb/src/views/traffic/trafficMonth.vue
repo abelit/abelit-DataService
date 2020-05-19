@@ -132,7 +132,7 @@ export default class ComponentName extends Vue {
         if (res.status == 200) {
           //{"tbheader":"psquare","tbdata":2000},{"tbheader":"phm","tbdata":3000}
           this.tableData = [];
-          res.data.forEach((item,index)=>{
+          res.data.forEach((item:any,index:any)=>{
             if(new Date(item.pdate)<new Date("2020-05-16")){
               item.pgatewaypiz=0;
               item.pkfc=0;
