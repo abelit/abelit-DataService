@@ -258,48 +258,55 @@ def get_time_passenger_traffic():
     oracle = Oracle(username='gdata', password='gdata',
                     mode="", host="10.50.0.212", port=1521, instance='gdata')
     sql_text = """SELECT
-        min(xf_starthour)||':'||'00'||'-'||max(xf_starthour)||':'||'00' 时间段,
+     to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd') pdate,
+        min(xf_tc_countdata.xf_starthour)||':'||'00'||'-'||max(xf_tc_countdata.xf_starthour)||':'||'00' ptime,
         nvl(sum(case
-        when XF_CAMERAID in 
-            ('GHGY5500033140','GHGY5500033141','GHGY5500033142','GHGY5500033143','GHGY5500033144','GHGY5500033147',
-            'GHGY5500033155','GHGY5500033156','GHGY5500033157','GHGY5500033158','GHGY5500033159',
-            'GHGY5500033169','GHGY5500033170','GHGY5500033171','GHGY5500033172','GHGY5500033173','GHGY5500033174','GHGY5500033168')
+        when xf_tc_pass.xf_pass_no in 
+            (7,8,9)
             then XF_INCOUNT  
             end),0) "沿湖广场",
         nvl(sum(case
-        when XF_CAMERAID in 
-            ('GHGY5500033026','GHGY5500033027','GHGY5500033028','GHGY5500033029','GHGY5500033030','GHGY5500033031','GHGY5500033032',
-            'GHGY5500033089','GHGY5500033090','GHGY5500033091','GHGY5500033092','GHGY5500033093','GHGY5500033094','GHGY5500033095')
+        when xf_tc_pass.xf_pass_no in 
+            (4,5)
             then XF_INCOUNT 
-            end),0) "H&M",
+            end),0) "HM",
         nvl(sum(case
-        when XF_CAMERAID in 
-            ('GHGY5500033203')
+        when xf_tc_pass.xf_pass_no in 
+            (11)
             then XF_INCOUNT  
-            end),0) "人行天桥",
+            end),0) "人行天桥(乐转旁)",
         nvl(sum(case
-        when XF_CAMERAID in 
-            ('GHGY5500033002','GHGY5500033003','GHGY5500033004','GHGY5500033005','GHGY5500033006','GHGY5500033007','GHGY5500033008','GHGY5500033009','GHGY5500033010',
-            'GHGY5500033014','GHGY5500033015','GHGY5500033016','GHGY5500033017','GHGY5500033018')
+        when xf_tc_pass.xf_pass_no in 
+            (12)
+            then XF_INCOUNT  
+            end),0) "人行天桥(必胜客旁)",
+        nvl(sum(case
+        when xf_tc_pass.xf_pass_no in 
+            (2)
+            then XF_INCOUNT  
+            end),0) "肯德基",
+        nvl(sum(case
+        when xf_tc_pass.xf_pass_no in 
+            (10)
+            then XF_INCOUNT  
+            end),0) "食尚汇门厅旁",
+        nvl(sum(case
+        when xf_tc_pass.xf_pass_no in 
+            (1)
             then XF_INCOUNT  
             end),0) "停车场",
         nvl(sum(case
-        when XF_CAMERAID in
-            ('GHGY5500033002','GHGY5500033003','GHGY5500033004','GHGY5500033005','GHGY5500033006','GHGY5500033007','GHGY5500033008','GHGY5500033009','GHGY5500033010',
-            'GHGY5500033014','GHGY5500033015','GHGY5500033016','GHGY5500033017','GHGY5500033018',
-            'GHGY5500033026','GHGY5500033027','GHGY5500033028','GHGY5500033029','GHGY5500033030','GHGY5500033031','GHGY5500033032',
-            'GHGY5500033089','GHGY5500033090','GHGY5500033091','GHGY5500033092','GHGY5500033093','GHGY5500033094','GHGY5500033095',
-            'GHGY5500033140','GHGY5500033141','GHGY5500033142','GHGY5500033143','GHGY5500033144','GHGY5500033147',
-            'GHGY5500033155','GHGY5500033156','GHGY5500033157','GHGY5500033158','GHGY5500033159',
-            'GHGY5500033169','GHGY5500033170','GHGY5500033171','GHGY5500033172','GHGY5500033173','GHGY5500033174','GHGY5500033168',
-            'GHGY5500033230','GHGY5500033229','GHGY5500033196','GHGY5500033197')
+        when xf_tc_pass.xf_pass_no in
+            (1,2,4,5,7,8,9,10,11,12)
             then XF_INCOUNT  
             end),0) "共计"
-        from 
-        xf_tc_countdata
+        from
+        xf_tc_countdata,xf_tc_pass
         WHERE
-        xf_starthour between 10 and 21 and
-        to_date(XF_DATE_TIME,'yyyy-mm-dd') between to_date('{0}','yyyy-mm-dd') and to_Date('{1}','yyyy-mm-dd')
+        xf_tc_countdata.xf_cameraid=xf_tc_pass.xf_cameraid and
+        xf_tc_countdata.xf_starthour between 10 and 21 and
+        to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd') between to_date('{0}','yyyy-mm-dd') and to_Date('{1}','yyyy-mm-dd')
+        group by  to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd')
         """
     results = oracle.select(sql_text.format(starttime, endtime))
 
@@ -309,11 +316,15 @@ def get_time_passenger_traffic():
         print(row[1])
         data.append({
             "pdate": row[0],
-            "psquare": row[1],
-            "phm": row[2],
-            "pgateway": row[3],
-            "pparking": row[4],
-            "pall": row[5]
+            "ptime": row[1],
+            "psquare": row[2],
+            "phm": row[3],
+            "pgateway": row[4],
+            "pgatewaypiz": row[5],
+            "pkfc": row[6],
+            "prest": row[7],
+            "pparking": row[8],
+            "pall": row[9]
         })
 
     return jsonify(data)
