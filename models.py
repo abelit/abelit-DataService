@@ -107,7 +107,8 @@ class EmployeeAttendanceModel(db.Model):
     snid = db.Column(db.String(200), nullable=False)
     snname = db.Column(db.String(200), nullable=False)
     unname = db.Column(db.String(200), nullable=False)
-    status = db.Column(db.Integer, nullable=False)
+    image = db.Column(db.Text, nullable=True)
+    status = db.Column(db.Integer, nullable=False,doc="0: 上传成功,1: 上传失败 ,2: 远程已有数据")
     created_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
 
@@ -119,3 +120,11 @@ class EmployeeAttendanceDeviceModel(db.Model):
     unname = db.Column(db.String(200), nullable=False)
     ip = db.Column(db.String(200), nullable=False)
     created_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)
+
+class ActivityParticipantModel(db.Model):
+    __tablename__ = "activity_participant"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(200), nullable=False)
+    phone = db.Column(db.String(11), nullable=False,unique=True)
+    signdate = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    label = db.Column(db.Integer, default=0, doc='0: no get;1:get')

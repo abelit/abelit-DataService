@@ -21,7 +21,7 @@
         >查看中奖详情</b-button
       >
       <div id="info">
-        <p>填写真实姓名+电话</p>
+        <p>*请填写真实姓名+电话</p>
         <p>5月10日20:00 将抽取3名幸运“花粉” 获赠“爱的赠礼”一份</p>
       </div>
     </div>
@@ -54,6 +54,13 @@
         >返回首页</b-button
       >
       </b-form>
+      
+     <div v-show="!show">
+         <b-alert show variant="danger" style="margin-top:60px;"
+          >本次活动报名已结束，期待您及时参加下一次活动！</b-alert>
+         <b-button type="submit" block variant="outline-primary" @click="btn3" style="margin-top:10px;"
+        >返回首页</b-button>
+     </div>
 
     </div>
     <div id="page2" style="z-index:2;top:100px;" v-if="currentPage == 3">
@@ -71,7 +78,7 @@
       </div>
       <div id="list" v-else>
         <b-alert show variant="danger" style="margin-top:60px;"
-          >未到开奖时间，请等候...</b-alert
+          >未到开奖时间，稍后为您揭晓中奖喜讯...</b-alert
         >
         <b-button type="submit" block variant="outline-primary" @click="btn3" style="margin-top:10px;"
         >返回首页</b-button
@@ -90,7 +97,7 @@ export default {
         phone: "",
       },
       items: [],
-      hours: 20,
+      hours: '2020-05-10 20:00:00',
       show: true,
       currentPage: 1,
       isOpen: false,
@@ -105,13 +112,15 @@ export default {
       }
 
       this.$axios
-        .post("http://10.46.100.220:5060/api/feedback/activity", this.form)
+        .post("/api/feedback/activity", this.form)
         .then((res) => {
-          console.log(res);
-          if (res.status == 200) {
+          // console.log(res);
+          if (res.data.code == 200) {
             alert("数据提交成功");
-          } else {
-            alert("填报异常，请检查后再次提交");
+          } 
+          if (res.data.code == 501)
+          {
+            alert("该手机号已经报名！");
           }
         })
         .catch((error) => {
@@ -127,15 +136,27 @@ export default {
       this.form.tel = "";
     },
     btn1() {
-      this.currentPage = 2;
+      this.$axios
+        .get("/api/feedback/activity")
+        .then((res) => {
+          if (new Date(res.data[0].servertime) >= new Date(this.hours)) {
+            this.show = false;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("填报异常，请检查后再次提交");
+        });
+        
+        this.currentPage = 2;
     },
     btn2() {
       this.currentPage = 3;
       this.$axios
-        .get("http://10.46.100.220:5060/api/feedback/activity")
+        .get("/api/feedback/activity")
         .then((res) => {
           console.log(new Date(res.data[0].servertime).getHours());
-          if (new Date(res.data[0].servertime).getHours() >= this.hours) {
+          if (new Date(res.data[0].servertime) >= new Date(this.hours)) {
             if (res.status == 200) {
               var reg = /^(\d{3})\d*(\d{4})$/;
 

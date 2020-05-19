@@ -53,15 +53,25 @@ class BaseConfig(object):
     # 配置Flask加密密钥
     SECRET_KEY = 'SFASDFAS$%@#$Ddfdfd523SDFGKPOXf56734453$%4z(fdasFSAD'
 
+    # 运行apps
+    APPS = ['employee']
+
+    # Scheduler
+    GLOBAL_SCHEDULER_ENABLE = False
+    GLOBAL_SCHEDULER_ID = '1001'
+    GLOBAL_SCHEDULER_INTERVAL = 5
+
+    APP_SCHEDULER_ENABLE = True
+
     # 配置数据库
     # 使用docker环境时把127.0.0.1改为db的容器名称
     DIALECT = 'mysql'
     DRIVER = 'pymysql'
-    USERNAME = 'ehr'
-    PASSWORD = ''
-    HOST = '10.46.101.70'
+    USERNAME = 'root'
+    PASSWORD = 'root'
+    HOST = '10.50.0.210'
     PORT = 3306
-    DATABASE = 'ehrdb'
+    DATABASE = 'dataservice'
     SQLALCHEMY_DATABASE_URI = '{}+{}://{}:{}@{}:{}/{}?charset=utf8'.format(
         DIALECT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE
     )

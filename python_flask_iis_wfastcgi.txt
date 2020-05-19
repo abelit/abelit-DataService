@@ -1,0 +1,82 @@
+Assume IIS is installed. My machine already had IIs 8.5.
+
+Install Python
+==============
+
+  1. Download web installer (Python 3.6.3).
+  2. Run as Administrator.
+  3. Select custom installation for all users.
+  4. Choose install directory such that there are no white spaces in the path. Not sure if it needs to be done. Just being cautious.
+  5. Check the box for "Add Python 3.6 to PATH".
+  
+Install wfastcgi and others
+===========================
+
+  1. Open Windows Powershell as Adminstrator.
+  2. Run: pip install wfastcgi
+  3. Run: pip install flask
+
+Setting up Website
+==================
+
+  1. On the powershell, run: wfastcgi-enable
+     It will produce configuration related output. Example:
+     """
+     Applied configuration changes to section "system.webserver/fastcgi" for "MACHINE/WEBROOT/APPHOST" at configuration commit path "MACHINE/WEBROOT/APPHOST".
+     "c:\python36\python.exe|c:\python36\lib\site-packages\wfastcgi.py" can now be used as a FastCGI script processor.
+     """
+  2. Run IIS as administrator.
+  3. Go to Connections and expand the tree.
+  4. Select "Sites".
+  5. Select "Add Website" under Actions panel on the right of the window.
+  6. A new window will pop up titled "Add Website". Fill in the necessary info: Site name, Directory containing the website content, IP address and port (I entered 5000).
+     Since I want to simply run it on local host, IP address can be left as "All unassigned".
+  7. The Physical Path you specified in Add Website contains the following files (barebones):
+     a. web.config: contains web configuration. It has the following content:
+     """
+     <?xml version="1.0" encoding="utf-8"?>
+     <configuration>
+     <system.webServer>
+       <handlers>
+        <remove name="Python27_via_FastCGI" />
+        <remove name="Python34_via_FastCGI" />
+        <add name="Python FastCGI"
+           path="*"
+           verb="*"
+           modules="FastCgiModule"
+           scriptProcessor="C:\Python36\python.exe|C:\Python36\Lib\site-packages\wfastcgi.py"
+          
+           resourceType="Unspecified"
+           requireAccess="Script" />
+       </handlers>
+     </system.webServer>
+     <appSettings>
+       <!-- Required settings -->
+       <add key="WSGI_HANDLER" value="myapp.app" />
+       <add key="PYTHONPATH" value="C:\inetpub\wwwroot\stealth" />
+     </appSettings>
+     </configuration>
+     """
+     
+     b. myapp.py: contains Flask applicatioh
+     """
+     from flask import Flask
+     app = Flask(__name__)
+
+     @app.route("/hello")
+     def hello():
+         return "Hello Stealth!"
+     """
+
+  8. You might have to restart the Server and the website after configuration changes. Option will be under Actions on the right.
+  
+  8. If you select the root node, you'll see a bunch of configuration features. We are interested in FastCGI Settings and Handler Mappings.
+     a. Under FastCGI settings, I have the following:
+        """
+        Full Path                |          Arguments
+        c:\python36\python.exe   |          c:\python36\lib\site-packages\wfastcgi.py
+        c:\Program Files\PHP\php-cgi.exe
+        """
+     b. Under Handler Mappings, you'll see different names. Based on web.config, you'll see "Python FastCGI".
+  
+  10. You can now enter "localhost:5000" into the browser.

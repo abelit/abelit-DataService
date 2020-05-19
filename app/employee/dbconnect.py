@@ -97,6 +97,9 @@ class MSSQLServer:
             self.cursor = self.connection.cursor()
             self.cursor.execute(sql, bindvars)
             print("The sql executing from database successfully and the sql is " + '"' + sql + '".')
+        except pymssql.IntegrityError:
+            # print("abeit uique ............")
+            raise pymssql.IntegrityError
         except Exception as cx_msg:
             print(cx_msg)
             raise Exception(cx_msg)

@@ -14,7 +14,11 @@
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
-from main import app, db
+from db import db
+
+from main import create_app
+
+app = create_app()
 
 migrate = Migrate(app, db)
 manager = Manager(app)

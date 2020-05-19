@@ -2,21 +2,21 @@ from flask import Flask, Blueprint, jsonify, request
 from flask_restful import Api, Resource,request
 from sqlalchemy.sql import and_
 import time
+from flask_apscheduler import APScheduler
 
 from models import EmployeeAttendanceModel,EmployeeAttendanceDeviceModel
 from db import db
 
 from app.employee.dbconnect import MSSQLServer
+import pymssql
 
 employee = Blueprint('employee', __name__)
-
 api = Api(employee)
 
+scheduler = APScheduler()
 
 @employee.route('/ping')
 def ping():
-    results = mssql.select(sql)
-    print(results[0][1])
     return jsonify({
         "ping": "Pong!",
         "ip": request.remote_addr,
@@ -30,8 +30,6 @@ class EmployeeAttendance(Resource):
         starttime = request.args.get('start')
         endtime = request.args.get('end')
         userid = request.args.get('userid')
-
-        print(starttime)
 
         # print(starttime + '-------' + endtime)
         condition = (1==1)
@@ -54,7 +52,9 @@ class EmployeeAttendance(Resource):
                 "checktime": e.checktime,
                 "snid": e.snid,
                 "snname": e.snname,
-                "unname": e.unname
+                "unname": e.unname,
+                "image": e.image,
+                "status": e.status
             })
 
         return jsonify(result)
@@ -72,6 +72,7 @@ class EmployeeAttendance(Resource):
         snid = req_data.get('snid')
         snname = req_data.get('snname')
         unname = req_data.get('unname')
+        image = req_data.get('image')
         # 0 upload successfully, 1 upload failed, 2 repeated data
         status = 0
 
@@ -112,7 +113,7 @@ class EmployeeAttendance(Resource):
                 rmsg, rcode = 'Failed to add attendance data to remote', 5503
                 status = 1
 
-        emp_attend = EmployeeAttendanceModel(userid=userid, username=username, checktime=checktime, temperature=temperature,snid=snid,snname=snname,unname=unname,status=status)
+        emp_attend = EmployeeAttendanceModel(userid=userid, username=username, checktime=checktime, temperature=temperature,snid=snid,snname=snname,unname=unname,image=image,status=status)
         try:
             db.session.add(emp_attend)
             db.session.commit()
@@ -161,7 +162,37 @@ class EmployeeAttendanceDevice(Resource):
             db.session.commit()
             msg, code = 'ok', 200
         except Exception:
-            msg, code = 'failed', 500
+            msg, code = 'failed', 5001
             db.session.rollback()
 
         return jsonify({"msg": msg,"code": code})
+
+@employee.route("/syncdata")
+def sync_data():
+    emp = []
+    code, msg = 200, "Sync data ok."
+    try:
+        emp = EmployeeAttendanceModel.query.filter_by(status=1).all()
+    except Exception:
+        pass
+
+    if len(emp) == 0:
+        return 'No data need sync.'
+ 
+    for i in emp:
+        # print(i.userid)
+        try:
+            mssql = MSSQLServer(host="192.168.1.87",port=1433, username='hlcsykqehr', password='hlcsykqehr123.',database='zy_hlc',charset="utf8")
+            addsql = "insert into checkinout_zy(userid,checktime,sn_id,sn_name,un_name) values('{0}','{1}','{2}','{3}','{4}')".format(i.userid, i.checktime,i.snid,i.snname,i.unname)
+            mssql.execute(addsql)
+            i.status = 0
+            code, msg = 200, 'ok'
+        except pymssql.IntegrityError:
+            # print("hhah uique ............")
+            i.status = 2
+            # raise Exception(pymssql.IntegrityError)
+        except Exception:
+            code, msg = 200, 'failed write data to remote database.' 
+
+    return msg,code
+    

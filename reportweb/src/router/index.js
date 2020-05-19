@@ -67,7 +67,8 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to,_from,next) => {
-  if(to.path == '/MotherDay') {
+  // console.log(to.path.toLowerCase()=='/motherday')
+  if(to.path.toLowerCase() == '/motherday') {
     document.title = "Garland#时光荏苒，爱您依旧#"
   }
   next()
