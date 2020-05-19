@@ -43,7 +43,11 @@
         >
           <el-table-column type="index" width="50"></el-table-column>
           <el-table-column prop="tbheader" label="入口"></el-table-column>
-          <el-table-column prop="tbdata" :label="titleLabel" :render-header="renderheader"></el-table-column>
+          <el-table-column
+            prop="tbdata"
+            :label="titleLabel"
+            :render-header="renderheader"
+          ></el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -59,7 +63,7 @@ export default class ComponentName extends Vue {
   loading: boolean = true;
   disabled: boolean = false;
   tableData: Array<object> = [];
-  titleLabel: string =" 客流(人次)"+ "/" + "10:00~22:00"
+  titleLabel: string = " 客流(人次)" + "/" + "10:00~22:00";
 
   pickerOptions: any = {
     disabledDate(time: any) {
@@ -114,12 +118,12 @@ export default class ComponentName extends Vue {
     ),
   ];
 
-  private renderheader(h:any, { column, $index }:any) {
-     return h('span', {}, [
-        h('span', {}, column.label.split('/')[0]),
-        h('br'),
-        h('span', {}, column.label.split('/')[1])
-     ])
+  private renderheader(h: any, { column, $index }: any) {
+    return h("span", {}, [
+      h("span", {}, column.label.split("/")[0]),
+      h("br"),
+      h("span", {}, column.label.split("/")[1]),
+    ]);
   }
 
   public thousandSeparator(num: number) {
@@ -171,7 +175,16 @@ export default class ComponentName extends Vue {
                 tbheader = "H&M";
                 break;
               case "pgateway":
-                tbheader = "人行天桥";
+                tbheader = "人行天桥(乐转旁)";
+                break;
+              case "pgatewaypiz":
+                tbheader = "人行天桥(必胜客旁)";
+                break;
+              case "pkfc":
+                tbheader = "肯德基";
+                break;
+              case "prest":
+                tbheader = "食尚汇门厅旁";
                 break;
               case "pparking":
                 tbheader = "停车场";
@@ -208,41 +221,43 @@ export default class ComponentName extends Vue {
 
     return [year, month, day].join("-");
   }
-  public getSummaries(param:any) {
-        const { columns, data } = param;
-        const sums:any = [];
-        columns.forEach((column:any, index:any) => {
-          if (index === 0) {
-            sums[index] = '总计';
-            return;
-          }
-          const values:any = data.map((item: any) => Number(item[column.property].replace(',','')));
-          if (!values.every((value: any) => isNaN(value))) {
-            sums[index] = values.reduce((prev:any, curr:any) => {
-              const value = Number(curr);
-              if (!isNaN(value)) {
-                return prev + curr;
-              } else {
-                return prev;
-              }
-            }, 0);
-            sums[index] = this.thousandSeparator(sums[index]) + '';
+  public getSummaries(param: any) {
+    const { columns, data } = param;
+    const sums: any = [];
+    columns.forEach((column: any, index: any) => {
+      if (index === 0) {
+        sums[index] = "总计";
+        return;
+      }
+      const values: any = data.map((item: any) =>
+        Number(item[column.property].replace(",", ""))
+      );
+      if (!values.every((value: any) => isNaN(value))) {
+        sums[index] = values.reduce((prev: any, curr: any) => {
+          const value = Number(curr);
+          if (!isNaN(value)) {
+            return prev + curr;
           } else {
-            sums[index] = '';
+            return prev;
           }
-        });
-
-        console.log(sums)
-
-        return sums;
+        }, 0);
+        sums[index] = this.thousandSeparator(sums[index]) + "";
+      } else {
+        sums[index] = "";
       }
-      public tableRowClassName({row, rowIndex}:any) {
-        console.log(row['tbdata'].replace(",",""))
-        if (row['tbdata'].replace(",","") >=5000) {
-          return 'warning-row';
-        }
-        return '';
-      }
+    });
+
+    console.log(sums);
+
+    return sums;
+  }
+  public tableRowClassName({ row, rowIndex }: any) {
+    console.log(row["tbdata"].replace(",", ""));
+    if (row["tbdata"].replace(",", "") >= 5000) {
+      return "warning-row";
+    }
+    return "";
+  }
 }
 </script>
 
@@ -255,9 +270,9 @@ export default class ComponentName extends Vue {
   }
 }
 
-  .el-table {
-    .success-row {
+.el-table {
+  .success-row {
     background: green;
   }
-  }
+}
 </style>
