@@ -30,7 +30,7 @@
         <el-table
           :data="tableData"
           v-loading="loading"
-          style="width: 691px"
+          style="width: 991px"
           show-summary
           :summary-method="getSummaries"
         >
@@ -39,7 +39,10 @@
           <el-table-column label="花果园购物中心1-疫情期各入口客流统计">
             <el-table-column prop="psquare" label="沿湖广场" :formatter="numberFormat" width="100"></el-table-column>
             <el-table-column prop="phm" label="H&M" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pgateway" label="人行天桥" :formatter="numberFormat" width="100"></el-table-column>
+            <el-table-column prop="pgateway" label="人行天桥(乐转旁)" :formatter="numberFormat" width="100"></el-table-column>
+            <el-table-column prop="pgatewaypiz" label="人行天桥(必胜客旁)" :formatter="numberFormat" width="100"></el-table-column>
+            <el-table-column prop="pkfc" label="肯德基" :formatter="numberFormat" width="100"></el-table-column>
+            <el-table-column prop="prest" label="食尚汇门厅旁" :formatter="numberFormat" width="100"></el-table-column>
             <el-table-column prop="pparking" label="停车场" :formatter="numberFormat" width="100"></el-table-column>
             <el-table-column prop="pall" label="总计" :formatter="numberFormat" width="100"></el-table-column>
           </el-table-column>
@@ -105,8 +108,8 @@ export default class ComponentName extends Vue {
 
     // this.tableData = [];
     //console.log(this.value2.toString())
-    console.log(this.re_month(this.value2)[0]);
-    console.log(this.re_month(this.value2)[1]);
+    //console.log(this.re_month(this.value2)[0]);
+    //console.log(this.re_month(this.value2)[1]);
     this.getData(
       this.formatDate(this.re_month(this.value2)[0]),
       this.formatDate(this.re_month(this.value2)[1])
@@ -129,7 +132,24 @@ export default class ComponentName extends Vue {
         if (res.status == 200) {
           //{"tbheader":"psquare","tbdata":2000},{"tbheader":"phm","tbdata":3000}
           this.tableData = [];
+          res.data.forEach((item,index)=>{
+            if(new Date(item.pdate)<new Date("2020-05-16")){
+              item.pgatewaypiz=0;
+              item.pkfc=0;
+              item.prest=0;
+            }
+            //   <el-table-column prop="psquare" label="沿湖广场" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="phm" label="H&M" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="pgateway" label="人行天桥(乐转旁)" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="pgatewaypiz" label="人行天桥(必胜客旁)" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="pkfc" label="肯德基" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="prest" label="食尚汇门厅旁" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="pparking" label="停车场" :formatter="numberFormat" width="100"></el-table-column>
+            item.pall=item.psquare+item.phm+item.pgateway+item.pgatewaypiz+item.pkfc+item.prest+item.pparking
+          
+          })
           this.tableData = res.data;
+          
           // let resData = res.data[0];
           // let tbheader;
           // for (let j in resData) {
@@ -179,7 +199,7 @@ export default class ComponentName extends Vue {
     return [year, month, day].join("-");
   }
   public getSummaries(param: any) {
-    console.log(param);
+    //console.log(param);
     const { columns, data } = param;
     const sums: any = [];
     columns.forEach((column: any, index: any) => {
