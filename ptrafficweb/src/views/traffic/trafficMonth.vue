@@ -30,7 +30,7 @@
         <el-table
           :data="tableData"
           v-loading="loading"
-          style="width: 991px"
+          style="width: 1192px"
           show-summary
           :summary-method="getSummaries"
         >
@@ -42,6 +42,8 @@
             <el-table-column prop="pgateway" label="人行天桥(乐转旁)" :formatter="numberFormat" width="100"></el-table-column>
             <el-table-column prop="pgatewaypiz" label="人行天桥(必胜客旁)" :formatter="numberFormat" width="100"></el-table-column>
             <el-table-column prop="pkfc" label="肯德基" :formatter="numberFormat" width="100"></el-table-column>
+            <el-table-column prop="pqbj" label="一楼黔宝金店旁" :formatter="numberFormat" width="100"></el-table-column>
+            <el-table-column prop="pck" label="CKJeans" :formatter="numberFormat" width="100"></el-table-column>
             <el-table-column prop="prest" label="食尚汇门厅旁" :formatter="numberFormat" width="100"></el-table-column>
             <el-table-column prop="pparking" label="停车场" :formatter="numberFormat" width="100"></el-table-column>
             <el-table-column prop="pall" label="总计" :formatter="numberFormat" width="100"></el-table-column>
@@ -138,6 +140,11 @@ export default class ComponentName extends Vue {
               item.pkfc=0;
               item.prest=0;
             }
+            if(new Date(item.pdate)<new Date("2020-05-24")){
+              item.pck=0;
+              item.pqbj=0;
+              
+            }
             //   <el-table-column prop="psquare" label="沿湖广场" :formatter="numberFormat" width="100"></el-table-column>
             // <el-table-column prop="phm" label="H&M" :formatter="numberFormat" width="100"></el-table-column>
             // <el-table-column prop="pgateway" label="人行天桥(乐转旁)" :formatter="numberFormat" width="100"></el-table-column>
@@ -145,7 +152,7 @@ export default class ComponentName extends Vue {
             // <el-table-column prop="pkfc" label="肯德基" :formatter="numberFormat" width="100"></el-table-column>
             // <el-table-column prop="prest" label="食尚汇门厅旁" :formatter="numberFormat" width="100"></el-table-column>
             // <el-table-column prop="pparking" label="停车场" :formatter="numberFormat" width="100"></el-table-column>
-            item.pall=item.psquare+item.phm+item.pgateway+item.pgatewaypiz+item.pkfc+item.prest+item.pparking
+            item.pall=item.psquare+item.phm+item.pgateway+item.pgatewaypiz+item.pkfc+item.prest+item.pparking+item.pck+item.pqbj
           
           })
           this.tableData = res.data;
@@ -221,6 +228,7 @@ export default class ComponentName extends Vue {
       } else {
         sums[index] = "N/A";
       }
+      return sums;
       // const values:any = data.map((item: any) => Number(item[column.property].replace(',','')));
 
       // if (!values.every((value: any) => isNaN(value))) {

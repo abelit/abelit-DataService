@@ -33,11 +33,10 @@
         <el-table
           :data="tableData"
           v-loading="loading"
-          :row-class-name="tableRowClassName"
           element-loading-text="客流数据加载中..."
           border
           show-summary
-          :summary-method="getSummaries"
+          
           style="width: 100%"
           :default-sort="{ prop: 'date', order: 'descending' }"
         >
@@ -46,6 +45,7 @@
           <el-table-column
             prop="tbdata"
             :label="titleLabel"
+            :formatter="numberFormat"
             :render-header="renderheader"
           ></el-table-column>
         </el-table>
@@ -64,7 +64,7 @@ export default class ComponentName extends Vue {
   disabled: boolean = false;
   tableData: Array<object> = [];
   titleLabel: string = " 客流(人次)" + "/" + "10:00~22:00";
-
+  
   pickerOptions: any = {
     disabledDate(time: any) {
       return time.getTime() >= Date.now();
@@ -166,6 +166,29 @@ export default class ComponentName extends Vue {
           this.tableData = [];
           let resData = res.data[0];
           let tbheader;
+           res.data.forEach((item,index)=>{
+            if(new Date(item.pdate)<new Date("2020-05-16")){
+              item.pgatewaypiz=0;
+              item.pkfc=0;
+              item.prest=0;
+            }
+            if(new Date(item.pdate)<new Date("2020-05-24")){
+              item.pck=0;
+              item.pqbj=0;
+              
+            }
+            item.pall=item.psquare+item.phm+item.pgateway+item.pgatewaypiz+item.pkfc+item.prest+item.pparking+item.pck+item.pqbj
+            //   <el-table-column prop="psquare" label="沿湖广场" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="phm" label="H&M" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="pgateway" label="人行天桥(乐转旁)" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="pgatewaypiz" label="人行天桥(必胜客旁)" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="pkfc" label="肯德基" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="prest" label="食尚汇门厅旁" :formatter="numberFormat" width="100"></el-table-column>
+            // <el-table-column prop="pparking" label="停车场" :formatter="numberFormat" width="100"></el-table-column>
+           /// item.pall=item.psquare+item.phm+item.pgateway+item.pgatewaypiz+item.pkfc+item.prest+item.pparking+item.pck+item.pqbj
+          
+          })
+          
           for (let j in resData) {
             switch (j) {
               case "psquare":
@@ -183,6 +206,12 @@ export default class ComponentName extends Vue {
               case "pkfc":
                 tbheader = "肯德基";
                 break;
+              case "pqbj":
+                tbheader = "一楼黔宝金店旁";
+                break;
+              case "pck":
+                tbheader = "CKJeans";
+                break;
               case "prest":
                 tbheader = "食尚汇门厅旁";
                 break;
@@ -193,15 +222,17 @@ export default class ComponentName extends Vue {
                 continue;
             }
 
+            
             this.tableData.push({
               tbheader: tbheader,
-              tbdata: this.thousandSeparator(resData[j]),
+              tbdata: resData[j],
+              //tbdata: this.thousandSeparator(resData[j]),
             });
             //console.log(j+":"+resData[j]);
           }
           this.loading = false;
           this.disabled = false;
-          console.log(this.tableData);
+         
         }
       })
       .catch((err) => {
@@ -221,7 +252,46 @@ export default class ComponentName extends Vue {
 
     return [year, month, day].join("-");
   }
+  // public getSummaries(param: any) {
+  //   const { columns, data } = param;
+  //   const sums: any = [];
+  //   columns.forEach((column: any, index: any) => {
+  //     if (index === 0) {
+  //       sums[index] = "总计";
+  //       return;
+  //     }
+  //     const values: any = data.map((item: any) =>
+  //       Number(item[column.property].replace(",", ""))
+  //     );
+  //     if (!values.every((value: any) => isNaN(value))) {
+  //       sums[index] = values.reduce((prev: any, curr: any) => {
+  //         const value = Number(curr);
+  //         if (!isNaN(value)) {
+  //           return prev + curr;
+  //         } else {
+  //           return prev;
+  //         }
+  //       }, 0);
+  //       sums[index] = this.thousandSeparator(sums[index]) + "";
+  //     } else {
+  //       sums[index] = "";
+  //     }
+  //   });
+
+  //   console.log(sums);
+
+  //   return sums;
+  // }
+  // public tableRowClassName({ row, rowIndex }: any) {
+  //   console.log(row["tbdata"].replace(",", ""));
+  //   if (row["tbdata"].replace(",", "") >= 5000) {
+  //     return "warning-row";
+  //   }
+  //   return "";
+  // }
+
   public getSummaries(param: any) {
+    
     const { columns, data } = param;
     const sums: any = [];
     columns.forEach((column: any, index: any) => {
@@ -229,10 +299,9 @@ export default class ComponentName extends Vue {
         sums[index] = "总计";
         return;
       }
-      const values: any = data.map((item: any) =>
-        Number(item[column.property].replace(",", ""))
-      );
-      if (!values.every((value: any) => isNaN(value))) {
+      const values:any = data.map(item => Number(item[column.property]));
+      
+     if (!values.every((value: any) => isNaN(value))) {
         sums[index] = values.reduce((prev: any, curr: any) => {
           const value = Number(curr);
           if (!isNaN(value)) {
@@ -241,22 +310,16 @@ export default class ComponentName extends Vue {
             return prev;
           }
         }, 0);
-        sums[index] = this.thousandSeparator(sums[index]) + "";
+        sums[index] = sums[index].toLocaleString();
       } else {
-        sums[index] = "";
+        sums[index] = "N/A";
       }
+      console.log(sums)
+      return sums;
     });
-
-    console.log(sums);
-
-    return sums;
   }
-  public tableRowClassName({ row, rowIndex }: any) {
-    console.log(row["tbdata"].replace(",", ""));
-    if (row["tbdata"].replace(",", "") >= 5000) {
-      return "warning-row";
-    }
-    return "";
+    public numberFormat(row: any, column: any, cellValue: any) {
+      return cellValue.toLocaleString();
   }
 }
 </script>
