@@ -287,9 +287,19 @@ def get_time_passenger_traffic():
             end),0) "肯德基",
         nvl(sum(case
         when xf_tc_pass.xf_pass_no in 
+            (3)
+            then XF_INCOUNT  
+            end),0) "黔宝金店旁",
+                    nvl(sum(case
+        when xf_tc_pass.xf_pass_no in 
             (10)
             then XF_INCOUNT  
             end),0) "食尚汇门厅旁",
+                    nvl(sum(case
+        when xf_tc_pass.xf_pass_no in 
+            (6)
+            then XF_INCOUNT  
+            end),0) "CKJeans旁",
         nvl(sum(case
         when xf_tc_pass.xf_pass_no in 
             (1)
@@ -322,9 +332,11 @@ def get_time_passenger_traffic():
             "pgateway": row[4],
             "pgatewaypiz": row[5],
             "pkfc": row[6],
-            "prest": row[7],
-            "pparking": row[8],
-            "pall": row[9]
+            "pqbj": row[7],
+            "prest": row[8],
+            "pck": row[9],
+            "pparking": row[10],
+            "pall": row[11]
         })
 
     return jsonify(data)
@@ -372,9 +384,19 @@ def get_date_passenger_traffic():
             end),0) "肯德基",
         nvl(sum(case
         when xf_tc_pass.xf_pass_no in 
+            (3)
+            then XF_INCOUNT  
+            end),0) "黔宝金店旁",
+                    nvl(sum(case
+        when xf_tc_pass.xf_pass_no in 
             (10)
             then XF_INCOUNT  
             end),0) "食尚汇门厅旁",
+                    nvl(sum(case
+        when xf_tc_pass.xf_pass_no in 
+            (6)
+            then XF_INCOUNT  
+            end),0) "CKJeans旁",
         nvl(sum(case
         when xf_tc_pass.xf_pass_no in 
             (1)
