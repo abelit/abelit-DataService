@@ -166,7 +166,7 @@ export default class ComponentName extends Vue {
           this.tableData = [];
           let resData = res.data[0];
           let tbheader;
-           res.data.forEach((item,index)=>{
+           res.data.forEach((item:any,index:any)=>{
             if(new Date(item.pdate)<new Date("2020-05-16")){
               item.pgatewaypiz=0;
               item.pkfc=0;
@@ -299,7 +299,7 @@ export default class ComponentName extends Vue {
         sums[index] = "总计";
         return;
       }
-      const values:any = data.map(item => Number(item[column.property]));
+      const values:any = data.map((item:any) => Number(item[column.property]));
       
      if (!values.every((value: any) => isNaN(value))) {
         sums[index] = values.reduce((prev: any, curr: any) => {
