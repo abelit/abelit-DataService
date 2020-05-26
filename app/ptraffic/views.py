@@ -429,9 +429,11 @@ def get_date_passenger_traffic():
             "pgateway": row[4],
             "pgatewaypiz": row[5],
             "pkfc": row[6],
-            "prest": row[7],
-            "pparking": row[8],
-            "pall": row[9]
+            "pqbj": row[7],
+            "prest": row[8],
+            "pck": row[9],
+            "pparking": row[10],
+            "pall": row[11]
         })
 
     return jsonify(data)
