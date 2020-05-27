@@ -167,6 +167,54 @@ class EmployeeAttendanceDevice(Resource):
 
         return jsonify({"msg": msg,"code": code})
 
+    def put(self):
+        req_data = request.json
+
+        msg, code = 'ok', 200
+
+        snid = req_data.get('snid')
+        snname = req_data.get('snname')
+        unname = req_data.get('unname')
+        ip = req_data.get('ip')
+        
+        empdvc = EmployeeAttendanceDeviceModel.query.filter_by(snid=snid).first()
+
+        if snname is not None:
+            empdvc.snname = snname
+        if unname is not None:
+            empdvc.unname = unname
+        if ip is not None:
+            empdvc.ip = ip
+        
+        try:
+            db.session.add(empdvc)
+            db.session.commit()
+            msg, code = 'ok', 200
+        except Exception:
+            msg, code = 'failed', 5001
+            db.session.rollback()
+
+        return jsonify({"msg": msg,"code": code})
+
+    def delete(self):
+        req_data = request.json
+
+        msg, code = 'ok', 200
+
+        snid = req_data.get('snid')
+        
+        empdvc = EmployeeAttendanceDeviceModel.query.filter_by(snid=snid).first()
+        
+        try:
+            db.session.delete(empdvc)
+            db.session.commit()
+            msg, code = 'ok', 200
+        except Exception:
+            msg, code = 'failed', 5001
+            db.session.rollback()
+
+        return jsonify({"msg": msg,"code": code})
+
 @employee.route("/syncdata")
 def sync_data():
     emp = []
