@@ -440,6 +440,35 @@ def get_date_passenger_traffic():
 
 @ptraffic.route("/compare")
 def get_compare_passenger_traffic():
+    """
+    API: http://58.42.231.98:5060/api/ptraffic/compare
+    参数（可选）: sart（开始日期）, end (结束日期)
+    说明：
+    "pdate": "日期",
+    "psquare": 沿湖广场,
+    "psquare_last": 沿湖广场去年同期,
+    "phm": HM,
+    "phm_last": HM去年同期,
+    "pgateway_lz": 人行天桥(乐转旁),
+    "pgateway_lz_last": 人行天桥(乐转旁)去年同期,
+    "pgateway_b": 人行天桥(必胜客旁),
+    "pgateway_b_last": 人行天桥(必胜客旁)去年同期,
+    "pkfc": 肯德基,
+    "pkfc_last": 肯德基去年同期,
+    "pqbj": 黔宝金店旁,
+    "pqbj_last": 黔宝金店旁去年同期,
+    "prest": 食尚汇门厅旁,
+    "prest_last": 食尚汇门厅旁去年同期,
+    "pck": CKJeans旁,
+    "pck_last": CKJeans旁去年同期,
+    "ppark": 停车场,
+    "ppark_last": 停车场去年同期,
+    "pall": 总计,
+    "pall_last": 总计（上一年）
+
+    示例: http://58.42.231.98:5060/api/ptraffic/compare?start=2020-07-01&end=2020-07-02
+
+    """
     import time
     starttime = request.args.get('start')
     endtime = request.args.get('end')
