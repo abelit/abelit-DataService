@@ -438,6 +438,179 @@ def get_date_passenger_traffic():
 
     return jsonify(data)
 
+@ptraffic.route("/compare")
+def get_compare_passenger_traffic():
+    import time
+    starttime = request.args.get('start')
+    endtime = request.args.get('end')
+
+    if starttime is None:
+        starttime = time.strftime("%Y-%m-%d", time.localtime())
+    if endtime is None:
+        endtime = time.strftime("%Y-%m-%d", time.localtime())
+    oracle = Oracle(username='gdata', password='gdata',
+                    mode="", host="10.50.0.212", port=1521, instance='gdata')
+    sql_text = """select to_char(a.pdate, 'yyyy-mm-dd') pdate,a.yh psquare,nvl(b.yh,0) psquare_last,a.hm phm,nvl(b.hm,0) phm_last,a.lz pgateway_lz,nvl(b.lz,0) pgateway_lz_last,
+            a.bsk pgateway_b,nvl(b.bsk,0) pgateway_b_last,a.kfc pkfc,nvl(b.kfc,0) pkfc_last,a.QBJD pqbj,nvl(b.qbjd,0) pqbj_last,
+            a.ssh prest,nvl(b.ssh,0) prest_last,a.ck pck,nvl(b.ck,0) pck_last,a.tcc ppark,nvl(b.tcc,0) ppark_last,a.al pall,nvl(b.al,0) pall_last
+            from 
+        (SELECT
+            to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd') pdate,
+                --min(xf_tc_countdata.xf_starthour)||':'||'00'||'-'||max(xf_tc_countdata.xf_starthour+1)||':'||'00' ptime,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (7,8,9)
+                    then XF_INCOUNT  
+                    end),0) YH,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (4,5)
+                    then XF_INCOUNT 
+                    end),0) HM,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (11)
+                    then XF_INCOUNT  
+                    end),0) LZ,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (12)
+                    then XF_INCOUNT  
+                    end),0) BSK,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (2)
+                    then XF_INCOUNT  
+                    end),0) KFC,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (3)
+                    then XF_INCOUNT  
+                    end),0) QBJD,
+                            nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (10)
+                    then XF_INCOUNT  
+                    end),0) SSH,
+                            nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (6)
+                    then XF_INCOUNT  
+                    end),0) CK,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (1)
+                    then XF_INCOUNT  
+                    end),0) TCC,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in
+                    (1,2,3,4,5,6,7,8,9,10,11,12)
+                    then XF_INCOUNT  
+                    end),0) AL
+                from
+                xf_tc_countdata,xf_tc_pass
+                WHERE
+                xf_tc_countdata.xf_cameraid=xf_tc_pass.xf_cameraid and
+                --xf_tc_countdata.xf_starthour between 10 and 21 and
+                xf_tc_countdata.XF_DATE_TIME between '{0}' and '{1}'
+                group by  to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd')) a,
+        (SELECT
+            to_date(substr(xf_tc_countdata.XF_DATE_TIME,1,4)+1||'-'||substr(xf_tc_countdata.XF_DATE_TIME,6,2)||'-'||substr(xf_tc_countdata.XF_DATE_TIME,9,2),'yyyy-mm-dd') s_pdate,
+            -- substr(xf_tc_countdata,1,4)-1||'-'||substr(xf_tc_countdata,6,2)||'-'||substr(xf_tc_countdata,9,2),'yyyy-mm-dd'
+                --min(xf_tc_countdata.xf_starthour)||':'||'00'||'-'||max(xf_tc_countdata.xf_starthour+1)||':'||'00' ptime,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (7,8,9)
+                    then XF_INCOUNT  
+                    end),0) YH,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (4,5)
+                    then XF_INCOUNT 
+                    end),0) HM,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (11)
+                    then XF_INCOUNT  
+                    end),0) LZ,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (12)
+                    then XF_INCOUNT  
+                    end),0) BSK,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (2)
+                    then XF_INCOUNT  
+                    end),0) KFC,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (3)
+                    then XF_INCOUNT  
+                    end),0) QBJD,
+                            nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (10)
+                    then XF_INCOUNT  
+                    end),0) SSH,
+                            nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (6)
+                    then XF_INCOUNT  
+                    end),0) CK,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (1)
+                    then XF_INCOUNT  
+                    end),0) TCC,
+                nvl(sum(case
+                when xf_tc_pass.xf_pass_no in
+                    (1,2,3,4,5,6,7,8,9,10,11,12)
+                    then XF_INCOUNT  
+                    end),0) AL
+                from
+                xf_tc_countdata,xf_tc_pass
+                WHERE
+                xf_tc_countdata.xf_cameraid=xf_tc_pass.xf_cameraid and
+                --xf_tc_countdata.xf_starthour between 10 and 21 and
+                xf_tc_countdata.XF_DATE_TIME between 
+                substr('{0}',1,4)-1||'-'||substr('{0}',6,2)||'-'||substr('{0}',9,2) and 
+                substr('{1}',1,4)-1||'-'||substr('{1}',6,2)||'-'||substr('{1}',9,2)
+                group by  xf_tc_countdata.XF_DATE_TIME) b
+        where a.pdate=b.s_pdate(+)
+        order by a.pdate
+        """
+    results = oracle.select(sql_text.format(starttime, endtime))
+
+    data = []
+
+    for row in results:
+        print(row[1])
+        data.append({
+            "pdate": row[0],
+            "psquare": row[1],
+            "psquare_last": row[2],
+            "phm": row[3],
+            "phm_last": row[4],
+            "pgateway_lz": row[5],
+            "pgateway_lz_last": row[6],
+            "pgateway_b": row[7],
+            "pgateway_b_last": row[8],
+            "pkfc": row[9],
+            "pkfc_last": row[10],
+            "pqbj": row[11],
+            "pqbj_last": row[12],
+            "prest": row[13],
+            "prest_last": row[14],
+            "pck": row[15],
+            "pck_last": row[16],
+            "ppark": row[17],
+            "ppark_last": row[18],
+            "pall": row[19],
+            "pall_last": row[20]
+        })
+
+    return jsonify(data)
 
 # @ptraffic.route("/date")
 # def get_date_passenger_traffic():

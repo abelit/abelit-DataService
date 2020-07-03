@@ -54,14 +54,14 @@ class BaseConfig(object):
     SECRET_KEY = 'SFASDFAS$%@#$Ddfdfd523SDFGKPOXf56734453$%4z(fdasFSAD'
 
     # 运行apps
-    APPS = ['employee']
+    APPS = ['traffic']
 
     # Scheduler
     GLOBAL_SCHEDULER_ENABLE = False
     GLOBAL_SCHEDULER_ID = '1001'
     GLOBAL_SCHEDULER_INTERVAL = 5
 
-    APP_SCHEDULER_ENABLE = True
+    APP_SCHEDULER_ENABLE = False
 
     # 配置数据库
     # 使用docker环境时把127.0.0.1改为db的容器名称
