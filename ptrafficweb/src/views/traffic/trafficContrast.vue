@@ -1,12 +1,25 @@
 <template>
   <div>
-    <div style="background:#409EFF;color:#ffffff;padding:10px;">花果园购物中心1-各入口客流去年同期对比统计(全天)</div>
+    <div style="background: #409eff; color: #ffffff; padding: 10px;">
+      花果园购物中心1-各入口客流去年同期对比统计(全天)
+    </div>
     <el-row>
       <el-col>
         <div class="block">
           <span class="demonstration mx-5">按月查询</span>
-          <el-date-picker v-model="value2" type="month" placeholder="选择月"></el-date-picker>
-          <el-button icon="el-icon-search" circle class="ma-5" :disabled="disabled" @click="btn"></el-button>
+          <el-date-picker
+            v-model="value2"
+            type="month"
+            placeholder="选择月"
+          ></el-date-picker>
+          <el-button
+            icon="el-icon-search"
+            circle
+            class="ma-5"
+            :disabled="disabled"
+            @click="btn"
+          ></el-button>
+          <el-button type="primary" @click="exportExcel">导出</el-button>
         </div>
       </el-col>
     </el-row>
@@ -30,33 +43,144 @@
         <el-table
           :data="tableData"
           v-loading="loading"
-         
           show-summary
           :summary-method="getSummaries"
+          id="export-table"
         >
-          <el-table-column type="index" width="70" label="序号"></el-table-column>
-          <el-table-column prop="pdate" label="日期" width="120" :formatter="dateFormat"></el-table-column>
-          <el-table-column label="花果园购物中心1-各入口客流去年同期对比统计(全天)">
-            <el-table-column prop="psquare" label="沿湖广场" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="psquare_last" label="(去年同期)沿湖广场" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="phm" label="H&M" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="phm_last" label="(去年同期)H&M" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pgateway_lz" label="人行天桥(乐转旁)" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pgateway_lz_last" label="(去年同期)人行天桥(乐转旁)" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pgateway_b" label="人行天桥(必胜客旁)" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pgateway_b_last" label="(去年同期)人行天桥(必胜客旁)" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pkfc" label="肯德基" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pkfc_last" label="(去年同期)肯德基" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pqbj" label="一楼黔宝金店旁" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pqbj_last" label="(去年同期)一楼黔宝金店旁" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pck" label="CKJeans" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pck_last" label="(去年同期)CKJeans" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="prest" label="食尚汇门厅旁" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="prest_last" label="(去年同期)食尚汇门厅旁" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="ppark" label="停车场" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="ppark_last" label="(去年同期)停车场" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pall" label="总计" :formatter="numberFormat" width="100"></el-table-column>
-            <el-table-column prop="pall_last" label="(去年同期)总计" :formatter="numberFormat" width="100"></el-table-column>
+          <el-table-column
+            type="index"
+            width="70"
+            label="序号"
+          ></el-table-column>
+          <el-table-column
+            prop="pdate"
+            label="日期"
+            width="120"
+            :formatter="dateFormat"
+          ></el-table-column>
+          <el-table-column
+            label="花果园购物中心1-各入口客流去年同期对比统计(全天)"
+          >
+            <el-table-column
+              prop="psquare"
+              label="沿湖广场"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="psquare_last"
+              label="(去年同期)沿湖广场"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="phm"
+              label="H&M"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="phm_last"
+              label="(去年同期)H&M"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pgateway_lz"
+              label="人行天桥(乐转旁)"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pgateway_lz_last"
+              label="(去年同期)人行天桥(乐转旁)"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pgateway_b"
+              label="人行天桥(必胜客旁)"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pgateway_b_last"
+              label="(去年同期)人行天桥(必胜客旁)"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pkfc"
+              label="肯德基"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pkfc_last"
+              label="(去年同期)肯德基"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pqbj"
+              label="一楼黔宝金店旁"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pqbj_last"
+              label="(去年同期)一楼黔宝金店旁"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pck"
+              label="CKJeans"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pck_last"
+              label="(去年同期)CKJeans"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="prest"
+              label="食尚汇门厅旁"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="prest_last"
+              label="(去年同期)食尚汇门厅旁"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="ppark"
+              label="停车场"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="ppark_last"
+              label="(去年同期)停车场"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pall"
+              label="总计"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pall_last"
+              label="(去年同期)总计"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
           </el-table-column>
         </el-table>
       </el-col>
@@ -68,6 +192,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Axios from "axios";
 import * as fecha from "element-ui/lib/utils/date";
+import FileSaver from "file-saver";
+import XLSX from "xlsx";
 @Component
 export default class ComponentName extends Vue {
   value2: Date = new Date();
@@ -79,7 +205,7 @@ export default class ComponentName extends Vue {
   pickerOptions: any = {
     disabledDate(time: any) {
       return time.getTime() >= Date.now();
-    }
+    },
   };
 
   // public value2: Array<string> = [
@@ -96,18 +222,43 @@ export default class ComponentName extends Vue {
     return h("span", {}, [
       h("span", {}, column.label.split("/")[0]),
       h("br"),
-      h("span", {}, column.label.split("/")[1])
+      h("span", {}, column.label.split("/")[1]),
     ]);
+  }
+
+  public exportExcel() {
+    // 生成工作簿对象
+    var wb = XLSX.utils.table_to_book(document.querySelector("#export-table"));
+    // 获取二进制字符串作为输出
+    var wbout = XLSX.write(wb, {
+      bookType: "xlsx",
+      bookSST: true,
+      type: "array",
+    });
+    try {
+      FileSaver.saveAs(
+        //Blob 对象表示一个不可变、原始数据的类文件对象。
+        //Blob 表示的不一定是JavaScript原生格式的数据。
+        //File 接口基于Blob，继承了 blob 的功能并将其扩展使其支持用户系统上的文件。
+        //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
+        new Blob([wbout], { type: "application/octet-stream" }),
+        //设置导出文件名称
+        "trafficContrast.xlsx"
+      );
+    } catch (e) {
+      if (typeof console !== "undefined") console.log(e, wbout);
+    }
+    return wbout;
   }
 
   public thousandSeparator(num: number) {
     return (
       num &&
       (num.toString().indexOf(".") != -1
-        ? num.toString().replace(/(\d)(?=(\d{3})+\.)/g, function($1, $2) {
+        ? num.toString().replace(/(\d)(?=(\d{3})+\.)/g, function ($1, $2) {
             return $2 + ",";
           })
-        : num.toString().replace(/(\d)(?=(\d{3})+\b)/g, function($1, $2) {
+        : num.toString().replace(/(\d)(?=(\d{3})+\b)/g, function ($1, $2) {
             return $2 + ",";
           }))
     );
@@ -137,23 +288,22 @@ export default class ComponentName extends Vue {
     Axios.get("http://58.42.231.98:5060/api/ptraffic/compare", {
       params: {
         start: s,
-        end: d
-      }
+        end: d,
+      },
     })
-      .then(res => {
+      .then((res) => {
         if (res.status == 200) {
           //{"tbheader":"psquare","tbdata":2000},{"tbheader":"phm","tbdata":3000}
           this.tableData = [];
-          res.data.forEach((item,index)=>{
-            if(new Date(item.pdate)<new Date("2020-05-16")){
-              item.pgateway_b=0;
-              item.pkfc=0;
-              item.prest=0;
+          res.data.forEach((item, index) => {
+            if (new Date(item.pdate) < new Date("2020-05-16")) {
+              item.pgateway_b = 0;
+              item.pkfc = 0;
+              item.prest = 0;
             }
-            if(new Date(item.pdate)<new Date("2020-05-24")){
-              item.pck=0;
-              item.pqbj=0;
-              
+            if (new Date(item.pdate) < new Date("2020-05-24")) {
+              item.pck = 0;
+              item.pqbj = 0;
             }
             //   <el-table-column prop="psquare" label="沿湖广场" :formatter="numberFormat" width="100"></el-table-column>
             // <el-table-column prop="phm" label="H&M" :formatter="numberFormat" width="100"></el-table-column>
@@ -162,11 +312,19 @@ export default class ComponentName extends Vue {
             // <el-table-column prop="pkfc" label="肯德基" :formatter="numberFormat" width="100"></el-table-column>
             // <el-table-column prop="prest" label="食尚汇门厅旁" :formatter="numberFormat" width="100"></el-table-column>
             // <el-table-column prop="pparking" label="停车场" :formatter="numberFormat" width="100"></el-table-column>
-            item.pall=item.psquare+item.phm+item.pgateway_lz+item.pgateway_b+item.pkfc+item.prest+item.ppark+item.pck+item.pqbj
-          
-          })
+            item.pall =
+              item.psquare +
+              item.phm +
+              item.pgateway_lz +
+              item.pgateway_b +
+              item.pkfc +
+              item.prest +
+              item.ppark +
+              item.pck +
+              item.pqbj;
+          });
           this.tableData = res.data;
-          
+
           // let resData = res.data[0];
           // let tbheader;
           // for (let j in resData) {
@@ -198,7 +356,7 @@ export default class ComponentName extends Vue {
           //console.log(this.tableData);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         this.disabled = false;
       });
@@ -293,7 +451,7 @@ export default class ComponentName extends Vue {
       "周四",
       "周五",
       "周六",
-      "周日"
+      "周日",
     ];
     return cellValue
       ? fecha.format(new Date(XXXXTime - 8 * 3600 * 1000), "yyyy-MM-dd") +

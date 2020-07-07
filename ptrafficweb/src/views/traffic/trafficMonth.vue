@@ -7,6 +7,7 @@
           <span class="demonstration mx-5">按月查询</span>
           <el-date-picker v-model="value2" type="month" placeholder="选择月"></el-date-picker>
           <el-button icon="el-icon-search" circle class="ma-5" :disabled="disabled" @click="btn"></el-button>
+          <el-button type="primary" @click="exportExcel">导出</el-button>
         </div>
       </el-col>
     </el-row>
@@ -33,6 +34,7 @@
           style="width: 1192px"
           show-summary
           :summary-method="getSummaries"
+          id="export-table"
         >
           <el-table-column type="index" width="70" label="序号"></el-table-column>
           <el-table-column prop="pdate" label="日期" width="120" :formatter="dateFormat"></el-table-column>
@@ -58,6 +60,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Axios from "axios";
 import * as fecha from "element-ui/lib/utils/date";
+import FileSaver from "file-saver";
+import XLSX from "xlsx";
 @Component
 export default class ComponentName extends Vue {
   value2: Date = new Date();
@@ -88,6 +92,31 @@ export default class ComponentName extends Vue {
       h("br"),
       h("span", {}, column.label.split("/")[1])
     ]);
+  }
+
+  public exportExcel() {
+    // 生成工作簿对象
+    var wb = XLSX.utils.table_to_book(document.querySelector("#export-table"));
+    // 获取二进制字符串作为输出
+    var wbout = XLSX.write(wb, {
+      bookType: "xlsx",
+      bookSST: true,
+      type: "array",
+    });
+    try {
+      FileSaver.saveAs(
+        //Blob 对象表示一个不可变、原始数据的类文件对象。
+        //Blob 表示的不一定是JavaScript原生格式的数据。
+        //File 接口基于Blob，继承了 blob 的功能并将其扩展使其支持用户系统上的文件。
+        //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
+        new Blob([wbout], { type: "application/octet-stream" }),
+        //设置导出文件名称
+        "trafficMonth.xlsx"
+      );
+    } catch (e) {
+      if (typeof console !== "undefined") console.log(e, wbout);
+    }
+    return wbout;
   }
 
   public thousandSeparator(num: number) {
