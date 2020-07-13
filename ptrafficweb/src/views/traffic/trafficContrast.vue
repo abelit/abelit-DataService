@@ -228,7 +228,12 @@ export default class ComponentName extends Vue {
 
   public exportExcel() {
     // 生成工作簿对象
-    var wb = XLSX.utils.table_to_book(document.querySelector("#export-table"));
+    // var wb = XLSX.utils.table_to_book(document.querySelector("#export-table"),{dateNF:'yyyy-mm-dd ([$-zh-cn]dddd)', raw: true});
+    var wb = XLSX.utils.table_to_book(document.querySelector("#export-table"),{raw: true});
+    // console.log(wb);
+    // console.log(XLSX.SSF.format('#,###', 12345789));
+
+    var eDate = this.formatDate(this.re_month(this.value2)[0]).split('-');
     // 获取二进制字符串作为输出
     var wbout = XLSX.write(wb, {
       bookType: "xlsx",
@@ -243,7 +248,7 @@ export default class ComponentName extends Vue {
         //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
         new Blob([wbout], { type: "application/octet-stream" }),
         //设置导出文件名称
-        "trafficContrast.xlsx"
+        "trafficContrast"+eDate[0]+eDate[1]+".xlsx"
       );
     } catch (e) {
       if (typeof console !== "undefined") console.log(e, wbout);
