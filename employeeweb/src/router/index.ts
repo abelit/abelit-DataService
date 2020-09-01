@@ -41,27 +41,27 @@ Vue.use(Router)
   all roles can be accessed
 */
 export const constantRoutes: RouteConfig[] = [
-  {
-    path: '/redirect',
-    component: Layout,
-    meta: { hidden: true },
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import(/* webpackChunkName: "redirect" */ '@/views/redirect/index.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/redirect',
+  //   component: Layout,
+  //   meta: { hidden: true },
+  //   children: [
+  //     {
+  //       path: '/redirect/:path(.*)',
+  //       component: () => import(/* webpackChunkName: "redirect" */ '@/views/redirect/index.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/login',
     component: () => import(/* webpackChunkName: "login" */ '@/views/login/index.vue'),
     meta: { hidden: true }
   },
-  {
-    path: '/auth-redirect',
-    component: () => import(/* webpackChunkName: "auth-redirect" */ '@/views/login/auth-redirect.vue'),
-    meta: { hidden: true }
-  },
+  // {
+  //   path: '/auth-redirect',
+  //   component: () => import(/* webpackChunkName: "auth-redirect" */ '@/views/login/auth-redirect.vue'),
+  //   meta: { hidden: true }
+  // },
   {
     path: '/404',
     component: () => import(/* webpackChunkName: "404" */ '@/views/error-page/404.vue'),
@@ -101,7 +101,7 @@ export const constantRoutes: RouteConfig[] = [
         meta: {
           title: 'AttendanceCheck',
           icon: 'table',
-          roles: ['admin'] // or you can only set roles in sub nav
+          roles: ['admin','ehr'] // or you can only set roles in sub nav
         }
       },
     ]
@@ -138,7 +138,7 @@ export const asyncRoutes: RouteConfig[] = [
     meta: {
       title: 'attendanceManagement',
       icon: 'lock',
-      roles: ['admin', 'editor'], // you can set roles in root nav
+      roles: ['admin', 'editor','ehr'], // you can set roles in root nav
       alwaysShow: true // will always show the root menu
     },
     children: [
@@ -148,7 +148,7 @@ export const asyncRoutes: RouteConfig[] = [
         name: 'PagePermission',
         meta: {
           title: 'AttendanceCheck',
-          roles: ['admin'] // or you can only set roles in sub nav
+          roles: ['admin','ehr'] // or you can only set roles in sub nav
         }
       },
       {
@@ -156,8 +156,9 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "permission-directive" */ '@/views/permission/device.vue'),
         name: 'DirectivePermission',
         meta: {
-          title: 'addDevice'
+          title: 'addDevice',
           // if do not set roles, means: this page does not require permission
+          roles: ['admin']
         }
       },
       {

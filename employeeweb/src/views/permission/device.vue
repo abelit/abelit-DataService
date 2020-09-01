@@ -240,9 +240,9 @@ export default class ComponentName extends Vue {
   }
 
   public getData() {
-    Axios.get('/api/employee/device', {})
+    Axios.get('http://10.46.101.70:5060/api/employee/device', {})
       .then(res => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           this.tableData = []
           // console.log(typeof res.data[22].checktime);
           this.loading = false
@@ -255,13 +255,13 @@ export default class ComponentName extends Vue {
   }
 
   public DelData(_data: string) {
-    Axios.delete('/api/employee/device', {
+    Axios.delete('http://10.46.101.70:5060/api/employee/device', {
       data: {
         snid: _data
       }
     })
       .then(res => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -280,9 +280,9 @@ export default class ComponentName extends Vue {
   }
 
   public AddData(_data: any) {
-    Axios.post('/api/employee/device', _data)
+    Axios.post('http://10.46.101.70:5060/api/employee/device', _data)
       .then(res => {
-        if (res.data.code == 200) {
+        if (res.data.code === 200) {
           this.$message({
             type: 'success',
             message: '添加成功!'
@@ -301,9 +301,9 @@ export default class ComponentName extends Vue {
   }
 
   public UpData(_data: any) {
-    Axios.put('/api/employee/device', _data)
+    Axios.put('http://10.46.101.70:5060/api/employee/device', _data)
       .then(res => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           this.$message({
             type: 'success',
             message: '修改成功'
@@ -411,6 +411,7 @@ export default class ComponentName extends Vue {
     if (reg.test(value)) {
       callback()
     } else {
+      // eslint-disable-next-line standard/no-callback-literal
       return callback('IP输入格式不合法！')
     }
   }

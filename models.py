@@ -128,3 +128,18 @@ class ActivityParticipantModel(db.Model):
     phone = db.Column(db.String(11), nullable=False,unique=True)
     signdate = db.Column(db.DateTime, nullable=False, default=datetime.now)
     label = db.Column(db.Integer, default=0, doc='0: no get;1:get')
+
+
+class EmployeeModel(db.Model):
+    __tablename__ = "employee"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(200), nullable=False, unique=True)
+    password = db.Column(db.String(200), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
+    avatar = db.Column(db.Text, nullable=True)
+    introduction = db.Column(db.String(200), nullable=True)
+    email = db.Column(db.String(200), nullable=False)
+    phone = db.Column(db.String(200), nullable=True)
+    roles = db.Column(db.Text, nullable=False)
+    status = db.Column(db.Integer, nullable=False,doc="0: 禁用,1: 正常")
+    created_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)

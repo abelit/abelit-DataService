@@ -4,11 +4,12 @@ from sqlalchemy.sql import and_
 import time
 from flask_apscheduler import APScheduler
 
-from models import EmployeeAttendanceModel,EmployeeAttendanceDeviceModel
+from models import EmployeeAttendanceModel,EmployeeAttendanceDeviceModel,EmployeeModel
 from db import db
 
 from app.employee.dbconnect import MSSQLServer
 import pymssql
+from werkzeug.security import generate_password_hash,check_password_hash
 
 employee = Blueprint('employee', __name__)
 api = Api(employee)
@@ -22,6 +23,56 @@ def ping():
         "ip": request.remote_addr,
         "router": request.path,
         "module": __name__
+    })
+
+@employee.route('/users/login',methods=['POST'])
+def login():
+    # username = "abelit"
+    req_data = request.json
+
+    username = req_data.get("username")
+    password = req_data.get("password")
+
+    user = EmployeeModel.query.filter_by(username=username).first()
+    if user and check_password_hash(user.password,password):
+        return jsonify({
+            "code": 20000,
+            "data": {
+            "accessToken": username + '-token'
+            }
+        })
+
+    return jsonify({
+        "code": 50004,
+        "messaege": 'Invalid User Or Password'
+    })
+
+@employee.route('/users/logout', methods=['POST'])
+def logout():
+    return jsonify({
+        "code": 20000
+    })
+
+@employee.route('/users/info', methods=['POST'])
+def get_user():
+    req_data = request.headers
+    username = req_data['X-Access-Token'].split('-')[0]
+    emp = EmployeeModel.query.filter_by(username=username).first()
+    users = {
+        "id": emp.id,
+        "username": emp.username,
+        "avatar": emp.avatar,
+        "name": emp.name,
+        "introduction": emp.introduction,
+        "email": emp.email,
+        "phone": emp.phone,
+        "roles": eval(emp.roles)
+    }
+    return jsonify({
+        "code": 20000,
+        "data": {
+            "user": users
+        }
     })
 
 class EmployeeAttendance(Resource):

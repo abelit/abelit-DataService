@@ -33,6 +33,7 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
       NProgress.done()
     } else {
       // Check whether the user has obtained his permission roles
+      console.log(UserModule)
       if (UserModule.roles.length === 0) {
         try {
           // Note: roles must be a object array! such as: ['admin'] or ['developer', 'editor']
@@ -53,17 +54,21 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
           NProgress.done()
         }
       } else {
+        console.log("hello .................")
         next()
       }
     }
   } else {
+    console.log(to.path)
     // Has no token
     if (whiteList.indexOf(to.path) !== -1) {
       // In the free login whitelist, go directly
       next()
+      console.log("hello1 .................")
     } else {
       // Other pages that do not have permission to access are redirected to the login page.
       next(`/login?redirect=${to.path}`)
+      console.log("hello2 .................")
       NProgress.done()
     }
   }

@@ -139,8 +139,8 @@ export default class extends Vue {
   }
 
   private loginForm = {
-    username: 'admin',
-    password: '111111'
+    username: '',
+    password: ''
   }
 
   private loginRules = {
@@ -204,6 +204,9 @@ export default class extends Vue {
           this.loading = false
         }, 0.5 * 1000)
       } else {
+        setTimeout(() => {
+          this.loading = false
+        }, 0.5 * 1000)
         return false
       }
     })

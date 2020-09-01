@@ -1,6 +1,9 @@
 <template>
   <div class="dashboard-editor-container">
-    <github-corner class="github-corner" />
+    <div>
+      统计报表(待开发)
+    </div>
+    <!-- <github-corner class="github-corner" />
 
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
@@ -69,7 +72,7 @@
       >
         <box-card />
       </el-col>
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 

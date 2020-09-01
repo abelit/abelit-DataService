@@ -166,7 +166,7 @@ export default class ComponentName extends Vue {
   }
 
   public getData(s: any, e: any, u: any) {
-    Axios.get('/api/employee/attend', {
+    Axios.get('http://10.46.101.70:5060/api/employee/attend', {
       params: {
         start: s,
         end: e,
