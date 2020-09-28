@@ -36,6 +36,11 @@ const routes: RouteConfig[] = [
     name: 'test',
     component: () => import('../views/traffic/trafficContrast.vue'),
   },
+  {
+    path: '/daysale',
+    name: 'daysale',
+    component: () => import('../views/sale/DaySale.vue'),
+  },
 ];
 
 const router = new VueRouter({

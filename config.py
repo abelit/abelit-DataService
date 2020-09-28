@@ -57,7 +57,7 @@ class BaseConfig(object):
     # feedback, 会员登记 
     # traffic, 客流查询
     # employee, 人脸打卡
-    APPS = ['employee']
+    APPS = ['traffic']
 
     # Scheduler
     GLOBAL_SCHEDULER_ENABLE = False

@@ -641,6 +641,98 @@ def get_compare_passenger_traffic():
 
     return jsonify(data)
 
+@ptraffic.route("/traffics")
+def get_traffics():
+    import datetime
+    starttime = request.args.get('start')
+    endtime = request.args.get('end')
+
+    if starttime is None:
+        # 当月第一天
+        starttime = datetime.datetime.strftime(datetime.datetime(datetime.datetime.now().year,datetime.datetime.now().month,1),'%Y-%m-%d')
+    if endtime is None:
+        endtime = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(days=1),'%Y-%m-%d')
+    oracle = Oracle(username='gdata', password='gdata',
+                    mode="", host="10.50.0.212", port=1521, instance='gdata')
+
+    sql_text = """
+        select sum(XF_INCOUNT) as nums from xf_tc_countdata where xf_cameraid in ( select xf_cameraid from xf_tc_pass) and XF_DATE_TIME between '{0}' and '{1}'
+    """    
+    alltraffics = oracle.select(sql_text.format(starttime, endtime))
+    daytraffics = oracle.select(sql_text.format(endtime, endtime))
+    data = {}
+
+    data["alltraffics"] =  alltraffics[0][0]
+    data["daytraffics"] =  daytraffics[0][0]
+
+    return jsonify(data)
+
+@ptraffic.route("/sales")
+def get_sales():
+    import datetime
+    starttime = request.args.get('start')
+    endtime = request.args.get('end')
+
+    if starttime is None:
+        # 当月第一天
+        starttime = datetime.datetime.strftime(datetime.datetime(datetime.datetime.now().year,datetime.datetime.now().month,1),'%Y-%m-%d')
+    if endtime is None:
+        endtime = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(days=1),'%Y-%m-%d')
+
+    oracle = Oracle(username='gl_mis', password='garland123321mis',
+                    mode="", host="10.10.10.20", port=1521, instance='garland.org')
+
+    sale_sql = """
+    select sum(gw_salesamount) as total, sum(case when  type=1 and gw_state in (1,2) then gw_salesamount else 0 end) as pos,sum(case when  not (type=1 and gw_state in (1,2)) then gw_salesamount else 0 end) nonpos  from gw_transsalestotal where gw_txdate between '{0}' and '{1}'
+    """
+
+    pos_sql = """
+    select m_type as postype, count(1) as posnum from tmp_posinstall group by m_type
+    """
+
+    posusage_sql = """
+    select count(distinct cashier_code) as posusage  from gw_transsalestotal where gw_txdate between '{0}' and '{1}' and type=1 and gw_state in (1,2)
+    """
+
+    inputsale_sql = """
+    SELECT
+    A.TENANTCODE,
+	A.TENANTNAME,
+	A.STORECODE,
+	A.STORENAME
+    FROM
+        gl_biapi.MIS_STOREINFO A JOIN
+    gl_biapi.V_SETTLE_R20 B ON A.MALL_ID = B.MALL_ID AND A.CONTRACTCODE = B.CONTRACTCODE
+    WHERE B.ACCOUNT_PAYABLE BETWEEN REPLACE(substr('{0}',0,7),'-','') AND REPLACE(substr('{1}',0,7),'-','') and a.storecode not in (select shops_code from gl_merchant.GW_SALE_DATA where sale_date='{1}')
+    """
+
+    data = {}
+
+    sales = oracle.select(sale_sql.format(starttime,endtime))
+    pos = oracle.select(pos_sql.format(starttime,endtime))
+    posusage = oracle.select(posusage_sql.format(starttime,endtime))
+    inputsale = oracle.select(inputsale_sql.format(starttime,endtime))
+
+    tmpres = []
+    for row in inputsale:
+        tmpres.append({
+            "mcode": row[0],
+            "mname": row[1],
+            "scode": row[2],
+            "sname": row[3]
+        })
+
+    data["totalsale"] = sales[0][0]
+    data["possale"] = sales[0][1]
+    data["posw280p"] = pos[0][1]
+    data["posa8"] = pos[1][1]
+    data["posusage"] = posusage[0][0]
+    data["inputsale"] = tmpres
+
+
+    return jsonify(data)
+
+
 # @ptraffic.route("/date")
 # def get_date_passenger_traffic():
 #     starttime = request.args.get('start')
