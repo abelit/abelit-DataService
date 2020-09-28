@@ -128,8 +128,8 @@ export default class ComponentName extends Vue {
   loading: boolean = false;
   disabled: boolean = false;
   initDate: any = new Date();
-  saleData: any = [];
-  trafficData: any = [];
+  saleData: any = {posa8: 0, posw280p: 0,inputsale:[],posusage: 0,possale: 0, totalsale: 0};
+  trafficData: any = {alltraffics: 0, daytraffics: 0};
 
   private mounted() {
     this.getSaleata(this.search.beginDate,this.search.endDate);
