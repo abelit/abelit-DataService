@@ -7,7 +7,7 @@
     <template #expandedRowRender="{text,record, index}">
       <a-table
         :columns="innerColumns"
-        :data-source="record.idata"
+        :data-source="innerData.filter(item => item.code == record.code && item.saledate == record.saledate)"
         :pagination="false"
       >
         <template
@@ -52,10 +52,7 @@
                 @click="edit(record.key)"
               >
                 <!-- <EditFilled /> -->
-                <a-button
-                  :type="editingKey !== '' ? 'dashed' : 'primary'"
-                  v-bind="editingKey !== '' ? { disabled: 'disabled' } : {}"
-                >
+                <a-button :type="editingKey !== '' ? 'dashed': 'primary'" v-bind="editingKey !== '' ? { disabled: 'disabled' } : {}">
                   <template #icon>
                     <EditFilled />
                   </template>
@@ -88,36 +85,6 @@ const data = [
     saleamount: 500,
     status: "正常",
     updatestatus: "已调整",
-    idata: [
-      {
-        key: 1,
-        goodsname: "科技货品1",
-        goodscode: "K001",
-        possale: 300,
-        comparesale: 100,
-        misinput: 50,
-        missale: 300,
-        minput: 500,
-        realsale: null,
-        goodsstate: "正常",
-        code: "107101",
-        saledate: "2020-11-01",
-      },
-      {
-        key: 2,
-        goodsname: "科技货品2",
-        goodscode: "K002",
-        possale: 300,
-        comparesale: 100,
-        misinput: 50,
-        missale: 300,
-        minput: 500,
-        realsale: null,
-        goodsstate: "正常",
-        code: "107101",
-        saledate: "2020-11-01",
-      },
-    ],
   },
   {
     key: 2,
@@ -127,24 +94,9 @@ const data = [
     saleamount: 600,
     status: "正常",
     updatestatus: "已调整",
-    idata: [
-      {
-        key: 1,
-        goodsname: "科技货品2",
-        goodscode: "K002",
-        possale: 300,
-        comparesale: 100,
-        misinput: 50,
-        missale: 300,
-        minput: 500,
-        realsale: null,
-        goodsstate: "正常",
-        code: "107101",
-        saledate: "2020-11-01",
-      },
-    ],
-  },
-  {
+  }
+,
+{
     key: 3,
     name: "周大福",
     code: "207101",
@@ -152,23 +104,7 @@ const data = [
     saleamount: 700,
     status: "正常",
     updatestatus: "已调整",
-    idata: [
-      {
-        key: 1,
-        goodsname: "周大福货品1",
-        goodscode: "Z001",
-        possale: 300,
-        comparesale: 100,
-        misinput: 50,
-        missale: 300,
-        minput: 500,
-        realsale: null,
-        goodsstate: "正常",
-        code: "207101",
-        saledate: "2020-11-01",
-      },
-    ],
-  },
+  }
 ];
 
 const innerColumns = [
@@ -180,12 +116,7 @@ const innerColumns = [
   { title: "MIS补录", dataIndex: "misinput", key: "misinput" },
   { title: "MIS", dataIndex: "missale", key: "missale" },
   { title: "商户补录", dataIndex: "minput", key: "minput" },
-  {
-    title: "实际销售",
-    dataIndex: "realsale",
-    key: "realsale",
-    slots: { customRender: "realsale" },
-  },
+  { title: "实际销售", dataIndex: "realsale", key: "realsale",slots: { customRender: "realsale" } },
   { title: "货品销售状态", dataIndex: "goodsstate", key: "goodsstate" },
   {
     title: "业绩调整操作",
@@ -207,8 +138,8 @@ const innerData = [
     minput: 500,
     realsale: null,
     goodsstate: "正常",
-    code: "107101",
-    saledate: "2020-11-01",
+    code: '107101',
+    saledate: '2020-11-01',
   },
   {
     key: 2,
@@ -221,8 +152,8 @@ const innerData = [
     minput: 500,
     realsale: null,
     goodsstate: "正常",
-    code: "107101",
-    saledate: "2020-11-01",
+    code: '107101',
+    saledate: '2020-11-01',
   },
 
   {
@@ -236,10 +167,11 @@ const innerData = [
     minput: 500,
     realsale: null,
     goodsstate: "正常",
-    code: "207101",
-    saledate: "2020-11-01",
-  },
+    code: '207101',
+    saledate: '2020-11-01',
+  }
 ];
+
 
 export default {
   components: {
@@ -265,9 +197,8 @@ export default {
       }
     },
     edit(key) {
-      const newData = [...this.data];
-      // console.log(newData)
-      const target = newData.filter((item) => key === item.idata.key)[0];
+      const newData = [...this.innerData];
+      const target = newData.filter((item) => key === item.key)[0];
       this.editingKey = key;
       if (target) {
         target.editable = true;
@@ -286,7 +217,7 @@ export default {
         this.cacheData = newCacheData;
       }
       this.editingKey = "";
-      console.log(target);
+      console.log(target)
     },
     cancel(key) {
       const newData = [...this.innerData];
@@ -301,18 +232,17 @@ export default {
         this.innerData = newData;
       }
     },
-    expand(expanded, record) {
-      this.expandedRowKeys = []; // 重置展开节点，只展开当前点击的节点（内部数据调用模板，无法做到同时几个内层表格数据直接缓存在页面）
-      // if (expanded) {
-      // this.expandedRowKeys = [record.dict_id]
-      // this.getDictItem() // 获取表格内部数据
-      // }
-      console.log(expanded);
-      console.log(record.idata);
-      // if (expanded) {
-      //   this.innerData = this.innerData.filter(item => item.code == record.code && item.saledate == record.saledate)
-      // }
-    },
+    // expand(expanded,record) {
+    //   this.expandedRowKeys = [] // 重置展开节点，只展开当前点击的节点（内部数据调用模板，无法做到同时几个内层表格数据直接缓存在页面）
+    //   // if (expanded) {
+    //   // this.expandedRowKeys = [record.dict_id]
+    //   // this.getDictItem() // 获取表格内部数据
+    //   // }
+    //   console.log(expanded, record)
+    //   if (expanded) {
+    //     this.innerData = this.innerData.filter(item => item.code == record.code && item.saledate == record.saledate)
+    //   }
+    // }
   },
 };
 </script>

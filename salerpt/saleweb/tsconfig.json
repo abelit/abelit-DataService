@@ -39,6 +39,8 @@
   ],
   "rules": {
     "no-unused-vars": "off",
-    "vue/no-unused-vars": "off"
+    "vue/no-unused-vars": "off",
+    "vue/require-v-for-key": "warn",
+    "vue/no-v-for-template-key-on-child": "warn",
   }
 }
