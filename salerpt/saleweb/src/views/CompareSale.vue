@@ -22,34 +22,34 @@
             'realsale',
             'goodsstate',
           ]"
-          #[col]="{ text, record, index }"
+          #[col]="{ text: inputText, record: inputRecord, index: inputIndex }"
         >
           <div :key="col">
             <a-input
-              v-if="record.editable"
+              v-if="inputRecord.editable"
               style="margin: -5px 0"
-              :value="text"
-              @change="(e) => handleChange(e.target.value, record.key, col)"
+              :value="inputText"
+              @change="(e) => handleChange(record.key, inputRecord.key,e.target.value, col)"
               :disabled="col == 'minput'"
             />
-            <template v-else> {{ text }}</template>
+            <template v-else> {{ inputText }} </template>
           </div>
         </template>
-        <template #operation="{ text, record, index }">
+        <template #operation="{ text: innerText, record: innerRecord, index: innerIndex }">
           <div class="editable-row-operations">
-            <span v-if="record.editable">
-              <a @click="save(record.key)">Save</a>
+            <span v-if="innerRecord.editable">
+              <a @click="save(record.key,innerRecord.key)">保存</a>
               <a-popconfirm
-                title="Sure to cancel?"
-                @confirm="cancel(record.key)"
+                title="放弃更改?"
+                @confirm="cancel(record.key,innerRecord.key)"
               >
-                <a>Cancel</a>
+                <a>取消</a>
               </a-popconfirm>
             </span>
             <span v-else>
               <a
                 v-bind="editingKey !== '' ? { disabled: 'disabled' } : {}"
-                @click="edit(record.key)"
+                @click="edit(record.key,innerRecord.key)"
               >
                 <!-- <EditFilled /> -->
                 <a-button
@@ -81,7 +81,7 @@ const columns = [
 
 const data = [
   {
-    key: 1,
+    key: 0,
     name: "科技眼镜",
     code: "107101",
     saledate: "2020-11-01",
@@ -90,7 +90,7 @@ const data = [
     updatestatus: "已调整",
     idata: [
       {
-        key: 1,
+        key: 0,
         goodsname: "科技货品1",
         goodscode: "K001",
         possale: 300,
@@ -100,11 +100,9 @@ const data = [
         minput: 500,
         realsale: null,
         goodsstate: "正常",
-        code: "107101",
-        saledate: "2020-11-01",
       },
       {
-        key: 2,
+        key: 1,
         goodsname: "科技货品2",
         goodscode: "K002",
         possale: 300,
@@ -114,13 +112,11 @@ const data = [
         minput: 500,
         realsale: null,
         goodsstate: "正常",
-        code: "107101",
-        saledate: "2020-11-01",
       },
     ],
   },
   {
-    key: 2,
+    key: 1,
     name: "科技眼镜",
     code: "107101",
     saledate: "2020-11-02",
@@ -129,7 +125,7 @@ const data = [
     updatestatus: "已调整",
     idata: [
       {
-        key: 1,
+        key: 0,
         goodsname: "科技货品2",
         goodscode: "K002",
         possale: 300,
@@ -139,13 +135,11 @@ const data = [
         minput: 500,
         realsale: null,
         goodsstate: "正常",
-        code: "107101",
-        saledate: "2020-11-01",
       },
     ],
   },
   {
-    key: 3,
+    key: 2,
     name: "周大福",
     code: "207101",
     saledate: "2020-11-01",
@@ -154,7 +148,7 @@ const data = [
     updatestatus: "已调整",
     idata: [
       {
-        key: 1,
+        key: 0,
         goodsname: "周大福货品1",
         goodscode: "Z001",
         possale: 300,
@@ -164,8 +158,6 @@ const data = [
         minput: 500,
         realsale: null,
         goodsstate: "正常",
-        code: "207101",
-        saledate: "2020-11-01",
       },
     ],
   },
@@ -246,7 +238,7 @@ export default {
     EditFilled,
   },
   data() {
-    this.cacheData = innerData.map((item) => ({ ...item }));
+    this.cacheData = data.map((item) => ({ ...item }));
     return {
       data,
       columns,
@@ -256,49 +248,55 @@ export default {
     };
   },
   methods: {
-    handleChange(value, key, column) {
-      const newData = [...this.innerData];
-      const target = newData.filter((item) => key === item.key)[0];
+    handleChange(fkey,ckey,value, column) {
+      // console.log(fkey,ckey,value, column)
+      const newData = [...this.data];
+      const target = newData[fkey].idata[ckey];
       if (target) {
         target[column] = value;
-        this.innerData = newData;
+        this.data = newData;
+        // console.log(this.data)
       }
     },
-    edit(key) {
+    edit(fkey,ckey) {
       const newData = [...this.data];
-      // console.log(newData)
-      const target = newData.filter((item) => key === item.idata.key)[0];
-      this.editingKey = key;
+
+      const target = newData[fkey].idata[ckey];
+      // console.log(target);
+      // const target = newData.filter((item) => key === item)
+      this.editingKey = ckey;
       if (target) {
         target.editable = true;
-        this.innerData = newData;
+        this.data = newData;
       }
     },
-    save(key) {
-      const newData = [...this.innerData];
+    save(fkey,ckey) {
+      console.log(fkey,ckey)
+      const newData = [...this.data];
       const newCacheData = [...this.cacheData];
-      const target = newData.filter((item) => key === item.key)[0];
-      const targetCache = newCacheData.filter((item) => key === item.key)[0];
+      const target = newData[fkey].idata[ckey];
+      const targetCache = newCacheData[fkey].idata[ckey];
       if (target && targetCache) {
         delete target.editable;
-        this.innerData = newData;
+        this.data = newData;
         Object.assign(targetCache, target);
         this.cacheData = newCacheData;
       }
       this.editingKey = "";
       console.log(target);
+      console.log(this.data)
     },
-    cancel(key) {
-      const newData = [...this.innerData];
-      const target = newData.filter((item) => key === item.key)[0];
+    cancel(fkey,ckey) {
+      const newData = [...this.data];
+      const target = newData[fkey].idata[ckey]
       this.editingKey = "";
       if (target) {
         Object.assign(
           target,
-          this.cacheData.filter((item) => key === item.key)[0]
+          this.cacheData[fkey].idata[ckey]
         );
         delete target.editable;
-        this.innerData = newData;
+        this.data = newData;
       }
     },
     expand(expanded, record) {
