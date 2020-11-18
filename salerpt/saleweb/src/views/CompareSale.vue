@@ -29,27 +29,27 @@
               v-if="inputRecord.editable"
               style="margin: -5px 0"
               :value="inputText"
-              @change="(e) => handleChange(record.key, inputRecord.key,e.target.value, col)"
+              @change="
+                (e) =>
+                  handleChange(record.key, inputRecord.key, e.target.value, col)
+              "
               :disabled="col == 'minput'"
             />
             <template v-else> {{ inputText }} </template>
           </div>
         </template>
-        <template #operation="{ text: innerText, record: innerRecord, index: innerIndex }">
+        <template
+          #operation="{ text: innerText, record: innerRecord, index: innerIndex }"
+        >
           <div class="editable-row-operations">
             <span v-if="innerRecord.editable">
-              <a @click="save(record.key,innerRecord.key)">保存</a>
-              <a-popconfirm
-                title="放弃更改?"
-                @confirm="cancel(record.key,innerRecord.key)"
-              >
-                <a>取消</a>
-              </a-popconfirm>
+              <a @click="save(record.key, innerRecord.key)">保存</a>
+              <a @click="cancel(record.key, innerRecord.key)">取消</a>
             </span>
             <span v-else>
               <a
                 v-bind="editingKey !== '' ? { disabled: 'disabled' } : {}"
-                @click="edit(record.key,innerRecord.key)"
+                @click="edit(record.key, innerRecord.key)"
               >
                 <!-- <EditFilled /> -->
                 <a-button
@@ -187,91 +187,50 @@ const innerColumns = [
   },
 ];
 
-const innerData = [
-  {
-    key: 1,
-    goodsname: "科技货品1",
-    goodscode: "K001",
-    possale: 300,
-    comparesale: 100,
-    misinput: 50,
-    missale: 300,
-    minput: 500,
-    realsale: null,
-    goodsstate: "正常",
-    code: "107101",
-    saledate: "2020-11-01",
-  },
-  {
-    key: 2,
-    goodsname: "科技货品2",
-    goodscode: "K002",
-    possale: 300,
-    comparesale: 100,
-    misinput: 50,
-    missale: 300,
-    minput: 500,
-    realsale: null,
-    goodsstate: "正常",
-    code: "107101",
-    saledate: "2020-11-01",
-  },
-
-  {
-    key: 3,
-    goodsname: "周大福货品1",
-    goodscode: "Z001",
-    possale: 300,
-    comparesale: 100,
-    misinput: 50,
-    missale: 300,
-    minput: 500,
-    realsale: null,
-    goodsstate: "正常",
-    code: "207101",
-    saledate: "2020-11-01",
-  },
-];
-
 export default {
   components: {
     EditFilled,
   },
   data() {
-    this.cacheData = data.map((item) => ({ ...item }));
+    // // 嵌套对象会导致内部对象无法进行深度拷贝
+    // this.cacheData = data.map(item => ({ ...item }));
+    // 使用JSON进行深度拷贝
+    this.cacheData = JSON.parse(JSON.stringify(data));
+    // console.log("data...")
+    // console.log(this.cacheData)
     return {
       data,
       columns,
       innerColumns,
-      innerData,
       editingKey: "",
     };
   },
   methods: {
-    handleChange(fkey,ckey,value, column) {
+    handleChange(fkey, ckey, value, column) {
       // console.log(fkey,ckey,value, column)
+      // console.log("change ...");
+      // console.log(this.cacheData);
       const newData = [...this.data];
       const target = newData[fkey].idata[ckey];
       if (target) {
         target[column] = value;
         this.data = newData;
-        // console.log(this.data)
       }
     },
-    edit(fkey,ckey) {
+    edit(fkey, ckey) {
+      // console.log("edit..");
+      // console.log(this.cacheData);
       const newData = [...this.data];
-
       const target = newData[fkey].idata[ckey];
-      // console.log(target);
-      // const target = newData.filter((item) => key === item)
       this.editingKey = ckey;
       if (target) {
         target.editable = true;
         this.data = newData;
       }
     },
-    save(fkey,ckey) {
-      console.log(fkey,ckey)
+    save(fkey, ckey) {
+      // console.log("save...");
+      // console.log(this.cacheData);
       const newData = [...this.data];
       const newCacheData = [...this.cacheData];
       const target = newData[fkey].idata[ckey];
@@ -283,33 +242,20 @@ export default {
         this.cacheData = newCacheData;
       }
       this.editingKey = "";
-      console.log(target);
-      console.log(this.data)
     },
-    cancel(fkey,ckey) {
+    cancel(fkey, ckey) {
+      // console.log("cancel");
+      // console.log(this.cacheData);
       const newData = [...this.data];
-      const target = newData[fkey].idata[ckey]
+      const target = newData[fkey].idata[ckey];
+      console.log(target);
       this.editingKey = "";
       if (target) {
-        Object.assign(
-          target,
-          this.cacheData[fkey].idata[ckey]
-        );
+        Object.assign(target, this.cacheData[fkey].idata[ckey]);
         delete target.editable;
         this.data = newData;
       }
-    },
-    expand(expanded, record) {
-      this.expandedRowKeys = []; // 重置展开节点，只展开当前点击的节点（内部数据调用模板，无法做到同时几个内层表格数据直接缓存在页面）
-      // if (expanded) {
-      // this.expandedRowKeys = [record.dict_id]
-      // this.getDictItem() // 获取表格内部数据
-      // }
-      console.log(expanded);
-      console.log(record.idata);
-      // if (expanded) {
-      //   this.innerData = this.innerData.filter(item => item.code == record.code && item.saledate == record.saledate)
-      // }
+      console.log(this.cacheData);
     },
   },
 };
