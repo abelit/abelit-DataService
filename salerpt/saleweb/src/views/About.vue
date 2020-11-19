@@ -1,138 +1,59 @@
 <template>
-  <a-table :columns="columns" :data-source="data" bordered>
-    <template v-for="col in ['name', 'age', 'address']" #[col]="{ text, record, index }">
-      <div :key="col">
-        <a-input
-          v-if="record.editable"
-          style="margin: -5px 0"
-          :value="text"
-          @change="e => handleChange(e.target.value, record.key, col)"
-        />
-        <template v-else>
-          {{ text }}
-        </template>
-      </div>
-    </template>
-    <template #operation="{ text, record, index }">
-      <div class="editable-row-operations">
-        <span v-if="record.editable">
-          <a @click="save(record.key)">Save</a>
-          <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
-            <a>Cancel</a>
-          </a-popconfirm>
-        </span>
-        <span v-else>
-          <a v-bind="editingKey !== '' ? { disabled: 'disabled' } : {}" @click="edit(record.key)">
-            Edit
-          </a>
-        </span>
-      </div>
-    </template>
-  </a-table>
+  <div>
+    {{ count.value }}
+    <button @click.prevent="Add">Add</button>
+    <div>
+      <button @click="GetTraffic">获取数据</button>
+      <li v-for="item in traffic.data" :key="item">{{ item.psquare }}</li>
+    </div>
+  </div>
 </template>
-<script>
-const columns = [
-  {
-    title: 'name',
-    dataIndex: 'name',
-    width: '25%',
-    slots: { customRender: 'name' },
-  },
-  {
-    title: 'age',
-    dataIndex: 'age',
-    width: '15%',
-    slots: { customRender: 'age' },
-  },
-  {
-    title: 'address',
-    dataIndex: 'address',
-    width: '40%',
-    slots: { customRender: 'address' },
-  },
-  {
-    title: 'operation',
-    dataIndex: 'operation',
-    slots: { customRender: 'operation' },
-  },
-];
 
-const data = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
-export default {
-  data() {
-    this.cacheData = data.map(item => ({ ...item }));
-    console.log("data...")
-    console.log(this.cacheData)
+<script lang="ts">
+import { defineComponent, onMounted, reactive, ref } from "vue";
+import axios from "axios";
+
+export default defineComponent({
+  name: "VueTest",
+  setup() {
+    const count = reactive({ value: 0 });
+    const url = "api/ptraffic/compare";
+    // const traffic = ref([]);
+    const traffic = reactive({ data: [] });
+
+    function Add() {
+      count.value += 1;
+    }
+
+    const GetTraffic = () => {
+      return  axios
+        .get(url, {
+          params: {
+            start: "2020-11-01",
+            end: "2020-11-30",
+          },
+        })
+        .then((res) => {
+          // // const traffic = ref([]);
+          // traffic.value = res.data;
+          traffic.data = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    onMounted(() =>{
+      GetTraffic()
+    });
     return {
-      data,
-      columns,
-      editingKey: '',
+      count,
+      Add,
+      traffic,
+      GetTraffic,
     };
   },
-  methods: {
-    handleChange(value, key, column) {
-      console.log("change ...")
-      console.log(this.cacheData)
-      const newData = [...this.data];
-      const target = newData.filter(item => key === item.key)[0];
-      console.log(newData)
-      console.log(target)
-      if (target) {
-        target[column] = value;
-        this.data = newData;
-      }
-    },
-    edit(key) {
-      console.log("edit ...")
-      console.log(this.cacheData)
-      const newData = [...this.data];
-      const target = newData.filter(item => key === item.key)[0];
-      this.editingKey = key;
-      if (target) {
-        target.editable = true;
-        this.data = newData;
-      }
-    },
-    save(key) {
-      console.log("save ...")
-      console.log(this.cacheData)
-      const newData = [...this.data];
-      const newCacheData = [...this.cacheData];
-      const target = newData.filter(item => key === item.key)[0];
-      const targetCache = newCacheData.filter(item => key === item.key)[0];
-      if (target && targetCache) {
-        delete target.editable;
-        this.data = newData;
-        Object.assign(targetCache, target);
-        this.cacheData = newCacheData;
-      }
-      this.editingKey = '';
-    },
-    cancel(key) {
-      console.log("cancel ...")
-      console.log(this.cacheData)
-      const newData = [...this.data];
-      const target = newData.filter(item => key === item.key)[0];
-      this.editingKey = '';
-      if (target) {
-        Object.assign(target, this.cacheData.filter(item => key === item.key)[0]);
-        delete target.editable;
-        this.data = newData;
-      }
-    },
-  },
-};
+  mounted() {
+    // this.GetTraffic()
+  }
+});
 </script>
-<style scoped>
-.editable-row-operations a {
-  margin-right: 8px;
-}
-</style>
