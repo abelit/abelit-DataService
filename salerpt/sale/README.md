@@ -1,4 +1,4 @@
-# saleweb
+# sale
 
 ## Project setup
 ```
