@@ -1,75 +1,109 @@
 <template>
-  <a-table
-    :columns="columns"
-    :data-source="data"
-    class="components-table-demo-nested"
-  >
-    <template #expandedRowRender="{text,record, index}">
-      <a-table
-        :columns="innerColumns"
-        :data-source="record.idata"
-        :pagination="false"
+  <div>
+    <div class="search-panel">
+      <a-button
+        type="primary"
+        @click="expandAll(isExpanded)"
+        class="expand-item"
       >
-        <template
-          v-for="col in [
-            'goodsname',
-            'goodscode',
-            'possale',
-            'comparesale',
-            'misinput',
-            'missale',
-            'minput',
-            'realsale',
-            'goodsstate',
-          ]"
-          #[col]="{ text: inputText, record: inputRecord, index: inputIndex }"
-        >
-          <div :key="col">
-            <a-input
-              v-if="inputRecord.editable"
-              style="margin: -5px 0"
-              :value="inputText"
-              @change="
-                (e) =>
-                  handleChange(record.key, inputRecord.key, e.target.value, col)
-              "
-              :disabled="col == 'minput'"
-            />
-            <template v-else> {{ inputText }} </template>
-          </div>
-        </template>
-        <template
-          #operation="{ text: innerText, record: innerRecord, index: innerIndex }"
-        >
-          <div class="editable-row-operations">
-            <span v-if="innerRecord.editable">
-              <a @click="save(record.key, innerRecord.key)">保存</a>
-              <a @click="cancel(record.key, innerRecord.key)">取消</a>
-            </span>
-            <span v-else>
-              <a
-                v-bind="editingKey !== '' ? { disabled: 'disabled' } : {}"
-                @click="edit(record.key, innerRecord.key)"
-              >
-                <!-- <EditFilled /> -->
-                <a-button
-                  :type="editingKey !== '' ? 'dashed' : 'primary'"
-                  v-bind="editingKey !== '' ? { disabled: 'disabled' } : {}"
-                >
-                  <template #icon>
-                    <EditFilled />
-                  </template>
-                </a-button>
-              </a>
-            </span>
-          </div>
+        {{ isExpanded ? "收起所有行" : "展开所有行" }}
+      </a-button>
+      <a-input
+        v-model:value="storeName"
+        placeholder="店铺名称"
+        class="content-item"
+      />
+      <a-range-picker v-model:value="dateValue" class="date-item" />
+      <a-button type="primary" @click="getStoreSale">
+        <template #icon><SearchOutlined /></template>
+      </a-button>
+    </div>
+    <div>
+      <a-table
+        :columns="columns"
+        :data-source="data"
+        :expandedRowKeys="defaultExpandedRowKeys"
+        bordered
+        @expand="onExpand"
+        :expandRowByClick="true"
+        class="components-table-demo-nested"
+      >
+        <template #expandedRowRender="{text,record, index}">
+          <a-table
+            :columns="innerColumns"
+            :data-source="record.idata"
+            :pagination="false"
+          >
+            <template
+              v-for="col in [
+                'goodsname',
+                'goodscode',
+                'possale',
+                'comparesale',
+                'misinput',
+                'missale',
+                'minput',
+                'realsale',
+                'goodsstate',
+              ]"
+              #[col]="{ text: inputText, record: inputRecord, index: inputIndex }"
+            >
+              <div :key="col">
+                <a-input
+                  v-if="inputRecord.editable"
+                  style="margin: -5px 0"
+                  :value="inputText"
+                  @change="
+                    (e) =>
+                      handleChange(
+                        record.key,
+                        inputRecord.key,
+                        e.target.value,
+                        col
+                      )
+                  "
+                  :disabled="col == 'minput'"
+                />
+                <template v-else> {{ inputText }} </template>
+              </div>
+            </template>
+            <template
+              #operation="{ text: innerText, record: innerRecord, index: innerIndex }"
+            >
+              <div class="editable-row-operations">
+                <span v-if="innerRecord.editable">
+                  <a @click="save(record.key, innerRecord.key)">保存</a>
+                  <a @click="cancel(record.key, innerRecord.key)">取消</a>
+                </span>
+                <span v-else>
+                  <a
+                    v-bind="editingKey !== '' ? { disabled: 'disabled' } : {}"
+                    @click="edit(record.key, innerRecord.key)"
+                  >
+                    <!-- <EditFilled /> -->
+                    <a-button
+                      :type="editingKey !== '' ? 'dashed' : 'primary'"
+                      v-bind="editingKey !== '' ? { disabled: 'disabled' } : {}"
+                    >
+                      <template #icon>
+                        <EditFilled />
+                      </template>
+                    </a-button>
+                  </a>
+                </span>
+              </div>
+            </template>
+          </a-table>
         </template>
       </a-table>
-    </template>
-  </a-table>
+    </div>
+  </div>
 </template>
 <script>
 import { EditFilled } from "@ant-design/icons-vue";
+import { SearchOutlined } from "@ant-design/icons-vue";
+import moment from "moment";
+import { getCurrentInstance } from "vue";
 const columns = [
   { title: "店铺名称", dataIndex: "name", key: "name" },
   { title: "店铺编号", dataIndex: "code", key: "code" },
@@ -190,26 +224,39 @@ const innerColumns = [
 export default {
   components: {
     EditFilled,
+    SearchOutlined,
   },
   data() {
     // // 嵌套对象会导致内部对象无法进行深度拷贝
     // this.cacheData = data.map(item => ({ ...item }));
     // 使用JSON进行深度拷贝
     this.cacheData = JSON.parse(JSON.stringify(data));
-    // console.log("data...")
-    // console.log(this.cacheData)
     return {
       data,
       columns,
       innerColumns,
       editingKey: "",
+      // defaultExpandAllRows: false,
+      defaultExpandedRowKeys: [],
+      isExpanded: false,
+      storeName: null,
+      dateValue: null,
+      dateFormat: "YYYY-MM-DD",
     };
   },
   methods: {
+    expandAll(param) {
+      if (param) {
+        this.defaultExpandedRowKeys = [];
+      } else {
+        this.defaultExpandedRowKeys = [...Array(data.length).keys()];
+      }
+      this.isExpanded = !this.isExpanded;
+    },
+    onExpand(expanded, record){//绑定的点击行事件
+        console.log(this)
+    },
     handleChange(fkey, ckey, value, column) {
-      // console.log(fkey,ckey,value, column)
-      // console.log("change ...");
-      // console.log(this.cacheData);
       const newData = [...this.data];
       const target = newData[fkey].idata[ckey];
       if (target) {
@@ -218,8 +265,6 @@ export default {
       }
     },
     edit(fkey, ckey) {
-      // console.log("edit..");
-      // console.log(this.cacheData);
       const newData = [...this.data];
       const target = newData[fkey].idata[ckey];
       this.editingKey = ckey;
@@ -229,8 +274,6 @@ export default {
       }
     },
     save(fkey, ckey) {
-      // console.log("save...");
-      // console.log(this.cacheData);
       const newData = [...this.data];
       const newCacheData = [...this.cacheData];
       const target = newData[fkey].idata[ckey];
@@ -244,8 +287,6 @@ export default {
       this.editingKey = "";
     },
     cancel(fkey, ckey) {
-      // console.log("cancel");
-      // console.log(this.cacheData);
       const newData = [...this.data];
       const target = newData[fkey].idata[ckey];
       console.log(target);
@@ -257,12 +298,47 @@ export default {
       }
       console.log(this.cacheData);
     },
+    getStoreSale() {
+      console.log(moment(this.dateValue[0]).format(this.dateFormat));
+      console.log(moment(this.dateValue[1]).format(this.dateFormat));
+      console.log(this.storeName);
+    },
+    getCurrentMonth(day) {
+      const date = new Date();
+      if (day == 1) {
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+      }
+
+      if (day == -1) {
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      }
+      return new Date();
+    },
+    moment,
+  },
+  created() {
+    this.dateValue = [
+      moment(this.getCurrentMonth(1), this.dateFormat),
+      moment(this.getCurrentMonth(-1), this.dateFormat),
+    ];
   },
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .editable-row-operations a {
   margin-right: 8px;
+}
+.search-panel {
+  .expand-item {
+  }
+  .content-item {
+    width: 180px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  .date-item {
+    margin-right: 20px;
+  }
 }
 </style>

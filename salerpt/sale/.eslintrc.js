@@ -15,6 +15,10 @@ module.exports = {
   },
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off"
+    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "no-unused-vars": "off",
+    "vue/no-unused-vars": "off",
+    "vue/require-v-for-key": "warn",
+    "vue/no-v-for-template-key-on-child": "warn",
   }
 };
