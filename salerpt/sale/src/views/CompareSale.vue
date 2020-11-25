@@ -8,17 +8,19 @@
       >
         {{ isExpanded ? "收起所有行" : "展开所有行" }}
       </a-button>
+      <span>店铺名称：</span>
       <a-input
         v-model:value="storeName"
         placeholder="店铺名称"
         class="content-item"
       />
+      <span>销售日期：</span>
       <a-range-picker v-model:value="dateValue" class="date-item" />
       <a-button type="primary" @click="getStoreSale">
         <template #icon><SearchOutlined /></template>
       </a-button>
     </div>
-    <div>
+    <div class="table-content">
       <a-table
         :columns="columns"
         :data-source="data"
@@ -103,7 +105,7 @@
 import { EditFilled } from "@ant-design/icons-vue";
 import { SearchOutlined } from "@ant-design/icons-vue";
 import moment from "moment";
-import { getCurrentInstance } from "vue";
+
 const columns = [
   { title: "店铺名称", dataIndex: "name", key: "name" },
   { title: "店铺编号", dataIndex: "code", key: "code" },
@@ -253,8 +255,9 @@ export default {
       }
       this.isExpanded = !this.isExpanded;
     },
-    onExpand(expanded, record){//绑定的点击行事件
-        console.log(this)
+    onExpand(expanded, record){
+      //绑定的点击行事件
+      
     },
     handleChange(fkey, ckey, value, column) {
       const newData = [...this.data];
@@ -329,12 +332,16 @@ export default {
 .editable-row-operations a {
   margin-right: 8px;
 }
+.table-content {
+  margin: 10px 10px 0px 10px;
+}
 .search-panel {
+  margin: 0px 0px 20px 0px;
   .expand-item {
+    margin-right: 20px;
   }
   .content-item {
     width: 180px;
-    margin-left: 20px;
     margin-right: 20px;
   }
   .date-item {
