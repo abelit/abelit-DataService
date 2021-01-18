@@ -184,7 +184,7 @@ export default class ComponentName extends Vue {
   public async getSaleata(start: string, end: string) {
     this.disabled = true;
     this.loading = true;
-    await Axios.get("http://58.42.231.98:5060/api/ptraffic/sales", {
+    await Axios.get("http://58.42.231.98:8860/api/ptraffic/sales", {
       params: {
         start: start,
         end: end,
@@ -207,7 +207,7 @@ export default class ComponentName extends Vue {
   public async getTrafficData(start: string, end: string) {
     this.disabled = true;
     this.loading = true;
-    await Axios.get("http://58.42.231.98:5060/api/ptraffic/traffics", {
+    await Axios.get("http://58.42.231.98:8860/api/ptraffic/traffics", {
       params: {
         start: start,
         end: end,
