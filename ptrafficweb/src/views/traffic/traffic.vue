@@ -154,7 +154,7 @@ export default class ComponentName extends Vue {
   public getData(s: string, d: string) {
     this.disabled = true;
     this.loading = true;
-    Axios.get("http://58.42.231.98:5060/api/ptraffic/time", {
+    Axios.get("http://58.42.231.98:8860/api/ptraffic/time", {
       params: {
         start: s,
         end: d,
