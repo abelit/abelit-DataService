@@ -481,7 +481,7 @@ def get_compare_passenger_traffic():
                     mode="", host="10.50.0.212", port=1521, instance='gdata')
     sql_text = """select to_char(a.pdate, 'yyyy-mm-dd') pdate,a.yh psquare,nvl(b.yh,0) psquare_last,a.hm phm,nvl(b.hm,0) phm_last,a.lz pgateway_lz,nvl(b.lz,0) pgateway_lz_last,
             a.bsk pgateway_b,nvl(b.bsk,0) pgateway_b_last,a.kfc pkfc,nvl(b.kfc,0) pkfc_last,a.QBJD pqbj,nvl(b.qbjd,0) pqbj_last,
-            a.ssh prest,nvl(b.ssh,0) prest_last,a.ck pck,nvl(b.ck,0) pck_last,a.tcc ppark,nvl(b.tcc,0) ppark_last,a.al pall,nvl(b.al,0) pall_last
+            a.ssh prest,nvl(b.ssh,0) prest_last,a.ck pck,nvl(b.ck,0) pck_last,a.tcc ppark,nvl(b.tcc,0) ppark_last,a.pone pone,nvl(b.pone,0) pone_last,a.eone eone,nvl(b.eone,0) eone_last,a.al pall,nvl(b.al,0) pall_last
             from 
         (SELECT
             to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd') pdate,
@@ -531,15 +531,27 @@ def get_compare_passenger_traffic():
                     (1)
                     then XF_INCOUNT  
                     end),0) TCC,
+                  nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (13)
+                    then XF_INCOUNT  
+                    end),0) PONE,
+                    nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (14)
+                    then XF_INCOUNT  
+                    end),0) EONE,
                 nvl(sum(case
                 when xf_tc_pass.xf_pass_no in
-                    (1,2,3,4,5,6,7,8,9,10,11,12)
+                    (1,2,3,4,5,6,7,8,9,10,11,12,13,14)
                     then XF_INCOUNT  
                     end),0) AL
                 from
-                xf_tc_countdata,xf_tc_pass
+                (select xf_cameraid, case when xf_cameraid in ('GHGY5500033230','GHGY5500033196','GHGY5500033203','GHGY5500033197') and XF_DATE_TIME>'2021-01-27' then xf_cameraid||'02' else xf_cameraid||'01' end as xf_vcameraid,xf_startyear,xf_startmonth,xf_startday,xf_starthour,xf_startminute,xf_endyear,xf_endmonth,xf_endday,xf_endhour,xf_endminute,xf_incount,xf_outcount,xf_remarks,xf_date_time,xf_date_time_use
+from
+ xf_tc_countdata where XF_DATE_TIME between '{0}' and '{1}') xf_tc_countdata,xf_tc_pass
                 WHERE
-                xf_tc_countdata.xf_cameraid=xf_tc_pass.xf_cameraid and
+                xf_tc_countdata.xf_vcameraid=xf_tc_pass.xf_vcameraid and
                 --xf_tc_countdata.xf_starthour between 10 and 21 and
                 xf_tc_countdata.XF_DATE_TIME between '{0}' and '{1}'
                 group by  to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd')) a,
@@ -592,15 +604,28 @@ def get_compare_passenger_traffic():
                     (1)
                     then XF_INCOUNT  
                     end),0) TCC,
+                    nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (13)
+                    then XF_INCOUNT  
+                    end),0) PONE,
+                    nvl(sum(case
+                when xf_tc_pass.xf_pass_no in 
+                    (14)
+                    then XF_INCOUNT  
+                    end),0) EONE,
                 nvl(sum(case
                 when xf_tc_pass.xf_pass_no in
-                    (1,2,3,4,5,6,7,8,9,10,11,12)
+                    (1,2,3,4,5,6,7,8,9,10,11,12,13,14)
                     then XF_INCOUNT  
                     end),0) AL
                 from
-                xf_tc_countdata,xf_tc_pass
+                (select xf_cameraid, case when xf_cameraid in ('GHGY5500033230','GHGY5500033196','GHGY5500033203','GHGY5500033197') and XF_DATE_TIME>'2021-01-27' then xf_cameraid||'02' else xf_cameraid||'01' end as xf_vcameraid,xf_startyear,xf_startmonth,xf_startday,xf_starthour,xf_startminute,xf_endyear,xf_endmonth,xf_endday,xf_endhour,xf_endminute,xf_incount,xf_outcount,xf_remarks,xf_date_time,xf_date_time_use
+from
+ xf_tc_countdata where XF_DATE_TIME between substr('{0}',1,4)-1||'-'||substr('{0}',6,2)||'-'||substr('{0}',9,2) and 
+                substr('{1}',1,4)-1||'-'||substr('{1}',6,2)||'-'||substr('{1}',9,2)) xf_tc_countdata,xf_tc_pass
                 WHERE
-                xf_tc_countdata.xf_cameraid=xf_tc_pass.xf_cameraid and
+                xf_tc_countdata.xf_vcameraid=xf_tc_pass.xf_vcameraid and
                 --xf_tc_countdata.xf_starthour between 10 and 21 and
                 xf_tc_countdata.XF_DATE_TIME between 
                 substr('{0}',1,4)-1||'-'||substr('{0}',6,2)||'-'||substr('{0}',9,2) and 
@@ -609,12 +634,14 @@ def get_compare_passenger_traffic():
         where a.pdate=b.s_pdate(+)
         order by a.pdate
         """
+
+    print(sql_text.format(starttime, endtime))
     results = oracle.select(sql_text.format(starttime, endtime))
 
     data = []
 
     for row in results:
-        print(row[1])
+        # print(row[1])
         data.append({
             "pdate": row[0],
             "psquare": row[1],
@@ -635,8 +662,12 @@ def get_compare_passenger_traffic():
             "pck_last": row[16],
             "ppark": row[17],
             "ppark_last": row[18],
-            "pall": row[19],
-            "pall_last": row[20]
+            "pone": row[19],
+            "pone_last": row[20],
+            "eone": row[21],
+            "eone_last": row[22],
+            "pall": row[23],
+            "pall_last": row[24]
         })
 
     return jsonify(data)
