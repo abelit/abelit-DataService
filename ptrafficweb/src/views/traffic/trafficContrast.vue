@@ -325,14 +325,23 @@ export default class ComponentName extends Vue {
           //{"tbheader":"psquare","tbdata":2000},{"tbheader":"phm","tbdata":3000}
           this.tableData = [];
           res.data.forEach((item, index) => {
-            if (new Date(item.pdate) < new Date("2020-05-16")) {
+            if (new Date("2020-01-24") <new Date(item.pdate) && new Date(item.pdate) < new Date("2020-05-16")) {
               item.pgateway_b = 0;
               item.pkfc = 0;
               item.prest = 0;
             }
-            if (new Date(item.pdate) < new Date("2020-05-24")) {
+            if (new Date("2020-01-24") <new Date(item.pdate) && new Date(item.pdate) < new Date("2020-05-24")) {
               item.pck = 0;
               item.pqbj = 0;
+            }
+             if (new Date("2020-01-24") <new Date(item.pdate) && new Date(item.pdate) < new Date("2020-05-16")) {
+              item.pgateway_b_last = 0;
+              item.pkfc_last = 0;
+              item.prest_last = 0;
+            }
+            if (new Date("2020-01-24") <new Date(item.pdate) && new Date(item.pdate) < new Date("2020-05-24")) {
+              item.pck_last = 0;
+              item.pqbj_last = 0;
             }
             //   <el-table-column prop="psquare" label="沿湖广场" :formatter="numberFormat" width="100"></el-table-column>
             // <el-table-column prop="phm" label="H&M" :formatter="numberFormat" width="100"></el-table-column>
@@ -350,7 +359,9 @@ export default class ComponentName extends Vue {
               item.prest +
               item.ppark +
               item.pck +
-              item.pqbj;
+              item.pqbj +
+              item.pone +
+              item.eone;
           });
           this.tableData = res.data;
 
