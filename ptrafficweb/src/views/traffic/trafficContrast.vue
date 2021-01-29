@@ -334,12 +334,12 @@ export default class ComponentName extends Vue {
               item.pck = 0;
               item.pqbj = 0;
             }
-             if (new Date("2020-01-24") <new Date(item.pdate) && new Date(item.pdate) < new Date("2020-05-16")) {
+             if (new Date("2020-01-24") <new Date(item.pdate_last) && new Date(item.pdate_last) < new Date("2020-05-16")) {
               item.pgateway_b_last = 0;
               item.pkfc_last = 0;
               item.prest_last = 0;
             }
-            if (new Date("2020-01-24") <new Date(item.pdate) && new Date(item.pdate) < new Date("2020-05-24")) {
+            if (new Date("2020-01-24") <new Date(item.pdate_last) && new Date(item.pdate_last) < new Date("2020-05-24")) {
               item.pck_last = 0;
               item.pqbj_last = 0;
             }

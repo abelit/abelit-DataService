@@ -481,7 +481,7 @@ def get_compare_passenger_traffic():
                     mode="", host="10.50.0.212", port=1521, instance='gdata')
     sql_text = """select to_char(a.pdate, 'yyyy-mm-dd') pdate,a.yh psquare,nvl(b.yh,0) psquare_last,a.hm phm,nvl(b.hm,0) phm_last,a.lz pgateway_lz,nvl(b.lz,0) pgateway_lz_last,
             a.bsk pgateway_b,nvl(b.bsk,0) pgateway_b_last,a.kfc pkfc,nvl(b.kfc,0) pkfc_last,a.QBJD pqbj,nvl(b.qbjd,0) pqbj_last,
-            a.ssh prest,nvl(b.ssh,0) prest_last,a.ck pck,nvl(b.ck,0) pck_last,a.tcc ppark,nvl(b.tcc,0) ppark_last,a.pone pone,nvl(b.pone,0) pone_last,a.eone eone,nvl(b.eone,0) eone_last,a.al pall,nvl(b.al,0) pall_last
+            a.ssh prest,nvl(b.ssh,0) prest_last,a.ck pck,nvl(b.ck,0) pck_last,a.tcc ppark,nvl(b.tcc,0) ppark_last,a.pone pone,nvl(b.pone,0) pone_last,a.eone eone,nvl(b.eone,0) eone_last,a.al pall,nvl(b.al,0) pall_last，to_char(add_months(a.pdate,-12), 'yyyy-mm-dd') pdate_last
             from 
         (SELECT
             to_date(xf_tc_countdata.XF_DATE_TIME,'yyyy-mm-dd') pdate,
@@ -667,7 +667,8 @@ from
             "eone": row[21],
             "eone_last": row[22],
             "pall": row[23],
-            "pall_last": row[24]
+            "pall_last": row[24],
+            "pdate_last": row[25]
         })
 
     return jsonify(data)
