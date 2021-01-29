@@ -23,17 +23,17 @@ const routes: RouteConfig[] = [
   },
   {
     path: '/traffic',
-    name: 'test',
+    name: 'traffic',
     component: () => import('../views/traffic/traffic.vue'),
   },
   {
     path: '/trafficMonth',
-    name: 'test',
+    name: 'trafficmonth',
     component: () => import('../views/traffic/trafficMonth.vue'),
   },
   {
     path: '/trafficContrast',
-    name: 'test',
+    name: 'trafficcontrast',
     component: () => import('../views/traffic/trafficContrast.vue'),
   },
   {

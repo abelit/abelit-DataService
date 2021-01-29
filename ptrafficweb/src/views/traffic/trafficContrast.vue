@@ -69,7 +69,7 @@
             ></el-table-column>
             <el-table-column
               prop="psquare_last"
-              label="(去年同期)沿湖广场"
+              label="沿湖广场(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
@@ -81,7 +81,7 @@
             ></el-table-column>
             <el-table-column
               prop="phm_last"
-              label="(去年同期)H&M"
+              label="H&M(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
@@ -93,7 +93,7 @@
             ></el-table-column>
             <el-table-column
               prop="pgateway_lz_last"
-              label="(去年同期)人行天桥(乐转旁)"
+              label="人行天桥(乐转旁)(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
@@ -105,7 +105,7 @@
             ></el-table-column>
             <el-table-column
               prop="pgateway_b_last"
-              label="(去年同期)人行天桥(必胜客旁)"
+              label="人行天桥(必胜客旁)(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
@@ -117,7 +117,7 @@
             ></el-table-column>
             <el-table-column
               prop="pkfc_last"
-              label="(去年同期)肯德基"
+              label="肯德基(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
@@ -129,7 +129,7 @@
             ></el-table-column>
             <el-table-column
               prop="pqbj_last"
-              label="(去年同期)一楼黔宝金店旁"
+              label="一楼黔宝金店旁(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
@@ -141,7 +141,7 @@
             ></el-table-column>
             <el-table-column
               prop="pck_last"
-              label="(去年同期)CKJeans"
+              label="CKJeans(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
@@ -153,7 +153,7 @@
             ></el-table-column>
             <el-table-column
               prop="prest_last"
-              label="(去年同期)食尚汇门厅旁"
+              label="食尚汇门厅旁(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
@@ -165,7 +165,31 @@
             ></el-table-column>
             <el-table-column
               prop="ppark_last"
-              label="(去年同期)停车场"
+              label="停车场(去年同期)"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pone"
+              label="一期天桥"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="pone_last"
+              label="一期天桥(去年同期)"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="eone"
+              label="E区天桥"
+              :formatter="numberFormat"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="eone_last"
+              label="E区天桥(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
@@ -177,7 +201,7 @@
             ></el-table-column>
             <el-table-column
               prop="pall_last"
-              label="(去年同期)总计"
+              label="总计(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
