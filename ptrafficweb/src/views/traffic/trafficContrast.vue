@@ -362,7 +362,21 @@ export default class ComponentName extends Vue {
               item.pqbj +
               item.pone +
               item.eone;
+
+            item.pall_last =
+              item.psquare_last +
+              item.phm_last +
+              item.pgateway_lz_last +
+              item.pgateway_b_last +
+              item.pkfc_last +
+              item.prest_last +
+              item.ppark_last +
+              item.pck_last +
+              item.pqbj_last +
+              item.pone_last +
+              item.eone_last;
           });
+       
           this.tableData = res.data;
 
           // let resData = res.data[0];
