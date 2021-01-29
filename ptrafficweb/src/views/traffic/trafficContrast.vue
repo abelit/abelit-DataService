@@ -183,13 +183,13 @@
             ></el-table-column>
             <el-table-column
               prop="eone"
-              label="E区天桥"
+              label="F区天桥"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
             <el-table-column
               prop="eone_last"
-              label="E区天桥(去年同期)"
+              label="F区天桥(去年同期)"
               :formatter="numberFormat"
               width="100"
             ></el-table-column>
